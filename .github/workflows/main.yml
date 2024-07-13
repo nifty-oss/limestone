@@ -104,7 +104,7 @@ jobs:
           key: ${{ runner.os }}-cargo-programs-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: ${{ runner.os }}-cargo-programs
       - name: Build programs
-        run: pnpm programs:build --features bpf-entrypoint
+        run: pnpm programs:build
       - name: Upload program builds
         uses: actions/upload-artifact@v4
         with:
