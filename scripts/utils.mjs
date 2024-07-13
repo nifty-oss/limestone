@@ -92,9 +92,9 @@ export function getCargoMetadata(folder) {
 }
 
 export function getClippyToolchain(folder) {
-  return getCargoMetadata(folder).scripts?.clippy?.toolchain?.channel;
+  return getCargoMetadata(folder)?.scripts?.clippy?.toolchain?.channel;
 }
 
 export function getRustfmtToolchain(folder) {
-  return getCargoMetadata(folder).scripts?.rustfmt?.toolchain?.channel;
+  return getCargoMetadata(folder)?.scripts?.rustfmt?.toolchain?.channel;
 }

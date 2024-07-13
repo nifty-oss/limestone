@@ -4,5 +4,10 @@ import { getRustfmtToolchain, getClippyToolchain } from '../utils.mjs';
 const rustfmtToolchain = getRustfmtToolchain();
 const clippyToolchain = getClippyToolchain();
 
-await $`echo "RUSTFMT_TOOLCHAIN=${rustfmtToolchain}" >> $GITHUB_ENV`;
-await $`echo "CLIPPY_TOOLCHAIN=${clippyToolchain}" >> $GITHUB_ENV`;
+if (rustfmtToolchain) {
+  await $`echo "RUSTFMT_TOOLCHAIN=${rustfmtToolchain}" >> $GITHUB_ENV`;
+}
+
+if (clippyToolchain) {
+  await $`echo "CLIPPY_TOOLCHAIN=${clippyToolchain}" >> $GITHUB_ENV`;
+}
