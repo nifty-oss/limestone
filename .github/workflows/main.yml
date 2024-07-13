@@ -1,0 +1,250 @@
+name: Main
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  NODE_VERSION: 18
+  SOLANA_VERSION: 1.18.12
+  CARGO_CACHE: |
+    ~/.cargo/bin/
+    ~/.cargo/registry/index/
+    ~/.cargo/registry/cache/
+    ~/.cargo/git/db/
+    target/
+
+jobs:
+  lint_programs:
+    name: Lint programs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v4
+      - name: Setup environment
+        uses: ./.github/actions/setup
+        with:
+          node: ${{ env.NODE_VERSION }}
+      - name: Set environment variables
+        shell: bash
+        run: pnpm zx ./scripts/ci/set-variables.mjs
+      - name: Install Rustfmt
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ env.RUSTFMT_TOOLCHAIN }}
+          components: rustfmt
+      - name: Install Clippy
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ env.CLIPPY_TOOLCHAIN }}
+          components: clippy
+      - name: Formatting
+        run: pnpm programs:format --check
+      - name: Clippy
+        run: pnpm programs:clippy
+
+  lint_rust_client:
+      name: Lint Rust client
+      runs-on: ubuntu-latest
+      steps:
+        - name: Git checkout
+          uses: actions/checkout@v4
+        - name: Setup environment
+          uses: ./.github/actions/setup
+          with:
+            node: ${{ env.NODE_VERSION }}
+        - name: Set environment variables
+          shell: bash
+          run: pnpm zx ./scripts/ci/set-variables.mjs
+        - name: Install Rustfmt
+          uses: dtolnay/rust-toolchain@master
+          with:
+            toolchain: ${{ env.RUSTFMT_TOOLCHAIN }}
+            components: rustfmt
+        - name: Install Clippy
+          uses: dtolnay/rust-toolchain@master
+          with:
+            toolchain: ${{ env.CLIPPY_TOOLCHAIN }}
+            components: clippy
+        - name: Formatting
+          run: pnpm clients:rust:format --check
+        - name: Clippy
+          run: pnpm clients:rust:clippy
+
+  lint_js_client:
+    name: Lint JS client
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v4
+      - name: Setup environment
+        uses: ./.github/actions/setup
+        with:
+          node: ${{ env.NODE_VERSION }}
+      - name: Lint JS client
+        run: pnpm clients:js:lint
+
+  build_programs:
+    name: Build programs
+    needs: [lint_programs, lint_rust_client, lint_js_client]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v4
+      - name: Setup environment
+        uses: ./.github/actions/setup
+        with:
+          node: ${{ env.NODE_VERSION }}
+          solana: ${{ env.SOLANA_VERSION }}
+      - name: Cache cargo dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.CARGO_CACHE }}
+          key: ${{ runner.os }}-cargo-programs-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-programs
+      - name: Build programs
+        run: pnpm programs:build --features bpf-entrypoint
+      - name: Upload program builds
+        uses: actions/upload-artifact@v4
+        with:
+          name: program-builds
+          path: ./target/deploy/*.so
+          if-no-files-found: error
+      - name: Save all builds for clients
+        uses: actions/cache/save@v4
+        with:
+          path: ./**/*.so
+          key: ${{ runner.os }}-builds-${{ github.sha }}
+
+  generate_clients:
+    name: Check client generation
+    needs: [lint_programs, lint_rust_client, lint_js_client]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v4
+      - name: Setup environment
+        uses: ./.github/actions/setup
+        with:
+          node: ${{ env.NODE_VERSION }}
+          solana: ${{ env.SOLANA_VERSION }}
+      - name: Set environment variables
+        shell: bash
+        run: pnpm zx ./scripts/ci/set-variables.mjs
+      - name: Install Rustfmt
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ env.RUSTFMT_TOOLCHAIN }}
+          components: rustfmt
+      - name: Generate clients
+        run: pnpm generate:clients
+      - name: Ensure working directory is clean
+        run: |
+          git status --porcelain
+          test -z "$(git status --porcelain)"
+
+  generate_idls:
+    name: Check IDL generation
+    needs: [lint_programs, lint_rust_client, lint_js_client]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v4
+      - name: Setup environment
+        uses: ./.github/actions/setup
+        with:
+          node: ${{ env.NODE_VERSION }}
+          solana: ${{ env.SOLANA_VERSION }}
+      - name: Cache cargo dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.CARGO_CACHE }}
+          key: ${{ runner.os }}-cargo-programs-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-programs
+      - name: Cache local cargo dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            .cargo/bin/
+            .cargo/registry/index/
+            .cargo/registry/cache/
+            .cargo/git/db/
+          key: ${{ runner.os }}-cargo-local-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-local
+      - name: Generate IDLs
+        run: pnpm generate:idls
+      - name: Ensure working directory is clean
+        run: |
+          git status --porcelain
+          test -z "$(git status --porcelain)"
+
+  test_programs:
+    name: Test programs
+    needs: [build_programs, generate_idls, generate_clients]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v4
+      - name: Setup environment
+        uses: ./.github/actions/setup
+        with:
+          node: ${{ env.NODE_VERSION }}
+          solana: ${{ env.SOLANA_VERSION }}
+      - name: Cache test cargo dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.CARGO_CACHE }}
+          key: ${{ runner.os }}-cargo-program-tests-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-program-tests
+            ${{ runner.os }}-cargo-programs-${{ hashFiles('**/Cargo.lock') }}
+            ${{ runner.os }}-cargo-programs
+      - name: Test programs
+        run: RUST_LOG=error pnpm programs:test
+
+  test_rust:
+    name: Test Rust client
+    needs: [build_programs, generate_idls, generate_clients]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v4
+      - name: Setup environment
+        uses: ./.github/actions/setup
+        with:
+          node: ${{ env.NODE_VERSION }}
+          solana: ${{ env.SOLANA_VERSION }}
+      - name: Cache Rust client dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.CARGO_CACHE }}
+          key: ${{ runner.os }}-cargo-rust-client-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-rust-client
+      - name: Restore all builds
+        uses: actions/cache/restore@v4
+        with:
+          path: ./**/*.so
+          key: ${{ runner.os }}-builds-${{ github.sha }}
+      - name: Test Rust client
+        run: RUST_LOG=error pnpm clients:rust:test
+
+  test_js:
+    name: Test JS client
+    needs: [build_programs, generate_idls, generate_clients]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v4
+      - name: Setup environment
+        uses: ./.github/actions/setup
+        with:
+          node: ${{ env.NODE_VERSION }}
+          solana: ${{ env.SOLANA_VERSION }}
+      - name: Restore all builds
+        uses: actions/cache/restore@v4
+        with:
+          path: ./**/*.so
+          key: ${{ runner.os }}-builds-${{ github.sha }}
+      - name: Test JS client
+        run: pnpm clients:js:test

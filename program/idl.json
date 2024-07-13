@@ -1,0 +1,72 @@
+{
+  "version": "0.0.0",
+  "name": "ephemeris_program",
+  "instructions": [
+    {
+      "name": "CreateAccount",
+      "accounts": [
+        {
+          "name": "from",
+          "isMut": true,
+          "isSigner": true,
+          "docs": [
+            "Funding account"
+          ]
+        },
+        {
+          "name": "to",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "New account (pda of `[base, slot number]`)"
+          ]
+        },
+        {
+          "name": "base",
+          "isMut": false,
+          "isSigner": true,
+          "isOptional": true,
+          "docs": [
+            "Base account for the address derivation (defaults to `fronm`)"
+          ]
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "The system program"
+          ]
+        }
+      ],
+      "args": [
+        {
+          "name": "slot",
+          "type": "u64"
+        },
+        {
+          "name": "lamports",
+          "type": "u64"
+        },
+        {
+          "name": "space",
+          "type": "u64"
+        },
+        {
+          "name": "owner",
+          "type": "publicKey"
+        }
+      ],
+      "discriminant": {
+        "type": "u8",
+        "value": 0
+      }
+    }
+  ],
+  "metadata": {
+    "origin": "shank",
+    "address": "EPHSqv4H9HG5xy1kQaQaLN14zyBP36Jzq7hrQ2ZEZbBj",
+    "binaryVersion": "0.4.2",
+    "libVersion": "^0.4.2"
+  }
+}

@@ -1,0 +1,10 @@
+[package]
+name = "ephemeris"
+description = "Generate slot-based unique program derive addresses"
+version = "0.0.0"
+edition = "2021"
+readme = "README.md"
+license-file = "Apache-2.0"
+
+[dependencies]
+solana-program = "^1.16"

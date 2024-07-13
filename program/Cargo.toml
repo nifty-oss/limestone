@@ -1,0 +1,19 @@
+[package]
+name = "ephemeris-program"
+version = "0.0.0"
+edition = "2021"
+readme = "./README.md"
+license-file = "../LICENSE"
+publish = false
+
+[package.metadata.solana]
+program-id = "EPHSqv4H9HG5xy1kQaQaLN14zyBP36Jzq7hrQ2ZEZbBj"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+
+[dependencies]
+arrayref = "^0.3"
+ephemeris = { version = "^0", path = "../library" }
+shank = "^0.4.2"
+solana-program = "~1.18"
