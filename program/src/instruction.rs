@@ -5,7 +5,7 @@ use solana_program::{program_error::ProgramError, pubkey::Pubkey};
 /// Instructions supported by the Ephemeris program.
 #[derive(Clone, Debug, ShankContext, ShankInstruction)]
 #[rustfmt::skip]
-pub enum CarbonInstruction {
+pub enum Instruction {
     /// Create a new account.
     #[account(0, writable, signer, name="from", desc="Funding account")]
     #[account(1, writable, name="to", desc="New account (pda of `[base, slot number]`)")]
@@ -26,7 +26,8 @@ pub enum CarbonInstruction {
     },
 }
 
-impl CarbonInstruction {
+impl Instruction {
+    /// Unpacks a byte buffer into a [Instruction](enum.Instruction.html).
     pub fn unpack(input: &[u8]) -> Result<Self, ProgramError> {
         match input.split_first() {
             // 0 - CreateAccount
@@ -40,7 +41,7 @@ impl CarbonInstruction {
                 let space = u64::from_le_bytes(*array_ref![rest, 16, 8]);
                 let owner = Pubkey::from(*array_ref![rest, 24, 32]);
 
-                Ok(CarbonInstruction::CreateAccount {
+                Ok(Instruction::CreateAccount {
                     slot,
                     lamports,
                     space,

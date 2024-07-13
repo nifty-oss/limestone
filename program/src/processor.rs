@@ -3,7 +3,7 @@ use solana_program::{account_info::AccountInfo, entrypoint::ProgramResult, msg, 
 
 use crate::instruction::{
     accounts::{Context, CreateAccountAccounts},
-    CarbonInstruction,
+    Instruction,
 };
 
 /// Process instructions for the program.
@@ -12,10 +12,10 @@ pub fn process_instruction<'a>(
     accounts: &'a [AccountInfo<'a>],
     instruction_data: &[u8],
 ) -> ProgramResult {
-    let instruction = CarbonInstruction::unpack(instruction_data)?;
+    let instruction = Instruction::unpack(instruction_data)?;
 
     match instruction {
-        CarbonInstruction::CreateAccount {
+        Instruction::CreateAccount {
             slot,
             lamports,
             space,
