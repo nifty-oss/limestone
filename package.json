@@ -4,8 +4,9 @@
     "programs:build": "zx ./scripts/program/build.mjs",
     "programs:test": "zx ./scripts/program/test.mjs",
     "programs:clean": "zx ./scripts/program/clean.mjs",
+    "programs:clippy": "zx ./scripts/program/clippy.mjs",
     "programs:format": "zx ./scripts/program/format.mjs",
-    "programs:lint": "zx ./scripts/program/lint.mjs",
+    "programs:lint": "pnpm programs:format && pnpm programs:clippy",
     "generate:idls": "zx ./scripts/generate-idls.mjs",
     "generate": "pnpm generate:idls && pnpm generate:clients",
     "generate:clients": "zx ./scripts/generate-clients.mjs",
@@ -14,7 +15,9 @@
     "validator:stop": "zx ./scripts/stop-validator.mjs",
     "clients:js:lint": "zx ./scripts/client/lint-js.mjs",
     "clients:js:test": "zx ./scripts/client/test-js.mjs",
-    "clients:rust:lint": "zx ./scripts/client/lint-rust.mjs",
+    "clients:rust:clippy": "zx ./scripts/client/clippy-rust.mjs",
+    "clients:rust:format": "zx ./scripts/client/format-rust.mjs",
+    "clients:rust:lint": "pnpm clients:rust:format && pnpm clients:rust:clippy",
     "clients:rust:test": "zx ./scripts/client/test-rust.mjs"
   },
   "devDependencies": {

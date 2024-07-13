@@ -11,7 +11,7 @@ import {
   createDefaultSolanaClient,
   createDefaultTransaction,
   generateKeyPairSignerWithSol,
-  signAndSendTransaction
+  signAndSendTransaction,
 } from './_setup';
 
 test('it creates a new account', async (t) => {
