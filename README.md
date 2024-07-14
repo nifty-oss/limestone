@@ -14,97 +14,133 @@
   <a href="https://crates.io/crates/ephemeris-client"><img src="https://img.shields.io/crates/v/ephemeris-client?logo=rust" /></a>
 </p>
 
-## Project setup
+## Overview
 
-The first thing you'll want to do is install NPM dependencies which will allow you to access all the scripts and tools provided by this template.
+Ephemeris enables the creation short-lived program derived addresses (PDAs) signers. These signers are used to create accounts which can be "safely" closed since the same account address (PDA signer) cannot be recreated after a time period.
 
-```sh
-pnpm install
+You can use Ephemeris as a library or invoke its instruction &mdash; either directly from a client or through a cross program invocation &mdash; in your project. In both cases, you delegate the account creation to Ephemeris.
+
+### Using it as a library
+
+From your project folder:
+
+```bash
+cargo add ephemeris
 ```
 
-## Managing programs
+On your program, you replace the use of `system_instruction::create_account` with `ephemeris::create_account`:
+```rust
+ephemeris::create_account(
+  program_id,
+  Arguments {
+    to: ctx.accounts.to,
+    from: ctx.accounts.from,
+    base: ctx.accounts.base.map(|account| *account.key),
+    slot,
+    lamports,
+    space,
+    owner,
+  },
+)?;
+```
+The arguments for the `create_account` are as follows:
+* `program_id`:
+   It is the address of your program (the account derivation will be done
+   within the scope of the program).
 
-You'll notice a `program` folder in the root of this repository. This is where your generated Solana program is located.
+* `to` (signer, writable):
+  It is the funding account.
 
-Whilst only one program gets generated, note that you can have as many programs as you like in this repository.
-Whenever you add a new program folder to this repository, remember to add it to the `members` array of your root `Cargo.toml` file.
-That way, your programs will be recognized by the following scripts that allow you to build, test, format and lint your programs respectively.
+* `from` (writable):
+  It is the account to be created (must be a PDA of `[base, slot]` derived from
+  program_id).
 
-```sh
-pnpm programs:build
-pnpm programs:test
-pnpm programs:format
-pnpm programs:lint
+* `base` (signer, optional):
+  Optional signer for the account derivation (it default to `from` if omitted).
+
+* `slot`:
+  The slot number for the derivation (the slot needs to be within the valid range,
+  i.e., not older than `current slot - TTL`).
+
+* `lamports`:
+  The lamports to be transferred to the new account (must be at least the amount
+  needed for the account to be rent-exempt).
+
+* `space`:
+  The data size for the new account.
+
+* `owner`:
+  Optinal program that will own the new account (it default to `program_id` if
+  omitted).
+
+> [!IMPORTANT]
+> `create_account` uses the default `TTL` value of `150` slots. This is typically the number of slots that a `blockhash` is available and maximizes the chance of the account creation to succeed. You can use the `create_account_with_ttl` if you want to use a different `TTL` value – a lower `TTL` provides a shorter interval for the PDA signer to be available. At the same time, if your transaction is not executed within the `TTL` slots, it will fail.
+
+### Invoking `ephemeris` program
+
+Ephemeris has a deployed program that can be used directly either from a client or another program and a companion client library with instruction builders.
+
+From your project folder:
+
+```bash
+cargo add ephemeris-client
 ```
 
-## Generating IDLs
+The `CreateAccountBuilder` builds the necessary instruction to create and account:
+```rust
+use ephemeris_client::{find_pda, instructions::CreateAccountBuilder};
 
-You may use the following command to generate the IDLs for your programs.
+let (pda, _) = find_pda(&payer.pubkey(), slot);
 
-```sh
-pnpm generate:idls
+let create_ix = CreateAccountBuilder::new()
+  .from(payer.pubkey())
+  .to(pda)
+  .slot(slot)
+  .lamports(5_000_000_000)
+  .space(200)
+  .owner(system_program::ID)
+  .instruction();
 ```
 
-Depending on your program's framework, this will either use Shank or Anchor to generate the IDLs.
-Note that, to ensure IDLs are generated using the correct framework version, the specific version used by the program will be downloaded and used locally.
+The same arguments used for the `create_account` function are used in the instruction builder.
 
-## Generating clients
+When used in a program, the `CreateAccountCpiBuilder` can be used directly to invoke the `create_account` instruction:
+```rust
+use ephemeris_client::instructions::CreateAccountCpiBuilder;
 
-Once your programs' IDLs have been generated, you can generate clients for them using the following command.
-
-```sh
-pnpm generate:clients
+CreateAccountCpiBuilder::new(program_info)
+  .from(&payer_info)
+  .to(&pda_info)
+  .system_program(&system_program_info)
+  .slot(slot)
+  .lamports(5_000_000_000)
+  .space(200)
+  .owner(system_program::ID)
+  .invoke()?;
 ```
 
-Alternatively, you can use the `generate` script to generate both the IDLs and the clients at once.
+> [!IMPORTANT]
+> The `ephemeris` program uses a default of `150` slots as the `TTL` value.
 
-```sh
-pnpm generate
-```
+## How it works
 
-## Managing clients
+Ephemeris takes adavantage of how PDAs are handled in the runtime &mdash; a program can "sign" on behalf of the PDAs derived from its program ID. There is no private key generated for the address and a PDA can only be used as a signer by the program that derives it. This guarantees that only the program can sign for a `create_account` instruction. By limiting when the program signs for the account creation, we can limit when an account can be created. A natural way to count time in a blockchain context is using the bock slot number.
 
-The following clients are available for your programs. You may use the following links to learn more about each client.
+> [!NOTE]
+> While PDA and PDA accounts are usually used interchangeably, a PDA is an address and not necessarily an account. More importantly, a PDA can be used to create an account owned by a different program than the only used to derive the PDA.
 
-- [JS client](./clients/js)
-- [Rust client](./clients/rust)
+## License
 
-## Starting and stopping the local validator
+Copyright (c) 2024 nifty-oss maintainers
 
-The following script is available to start your local validator.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-```sh
-pnpm validator:start
-```
+    http://www.apache.org/licenses/LICENSE-2.0
 
-By default, if a local validator is already running, the script will be skipped. You may use the `validator:restart` script instead to force the validator to restart.
-
-```sh
-pnpm validator:restart
-```
-
-Finally, you may stop the local validator using the following command.
-
-```sh
-pnpm validator:stop
-```
-
-## Using external programs in your validator
-
-If your program requires any external programs to be running, you'll want to in your local validator.
-
-You can do this by adding their program addresses to the `program-dependencies` array in the `Cargo.toml` of your program.
-
-```toml
-program-dependencies = [
-  "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s",
-  "noopb9bkMVfRPU8AsbpTUg8AQkHtKwMYZiFUjNRtMmV",
-]
-```
-
-Next time you build your program and run your validator, these external programs will automatically be fetched from mainnet and used in your local validator.
-
-```sh
-pnpm programs:build
-pnpm validator:restart
-```
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
