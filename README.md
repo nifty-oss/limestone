@@ -135,7 +135,7 @@ This in practice restricts the ability to recreate the same account: if the acco
 > [!NOTE]
 > While PDA and PDA accounts are usually used interchangeably, a PDA is an address and not necessarily an account. More importantly, a PDA can be used to create an account owned by a different program than the one used to derive the PDA.
 
-## Limitations
+## Limitation
 
 Although the use `TTL` defines a time period where the account creation is allowed &mdash; `150` slots is approximately 1 minute 19 seconds assuming `400`ms block times &mdash; it does not guarantee that the account is not closed and recreated between that interval. Additionally, it does not prevent an account being created, closed and recreated on the same transaction.
 
