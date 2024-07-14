@@ -124,7 +124,11 @@ CreateAccountCpiBuilder::new(program_info)
 
 ## How it works
 
-Ephemeris takes adavantage of how PDAs are handled in the runtime &mdash; a program can "sign" on behalf of the PDAs derived from its program ID. There is no private key generated for the address and a PDA can only be used as a signer by the program that derives it. This guarantees that only the program can sign for a `create_account` instruction. By limiting when the program signs for the account creation, we can limit when an account can be created. A natural way to count time in a blockchain context is using the bock slot number.
+Ephemeris takes adavantage of how PDAs are handled in the runtime &mdash; a program can "sign" on behalf of the PDAs derived from its program ID. This provides an important property: there is no private key generated for the address and, since the program is the only one that can sign on behalf of the PDA, there is an opportunity to control when it would do so. By limiting when this happens, we limit when a particular account can be created.
+
+In Epemeris, PDAs are derived using a slot number and each slot has a time-to-leave (`TTL`) associated with it. The `TTL` is used to validate whether the slot used to derive the PDA is too old or not. When the slot is deemed too old, Ephemeris will not sign the instruction &mdash; i.e., PDAs have a slot "range" (`slot > current slot - TTL`) where they can be used as signers.
+
+This in practice restricts the ability to recreate the same account. If the account is closed after `TTL` slots have passed, there is no way to recreate the same account. This mitigates concerns of closeable mints, for example. A `mint` account can be created using an address generated using Ephemeris and be safely closeable without worries that it can be recreated in the future &mdash; there is no need to impose restrictions that a `mint` cannot be closed. This is particularly interesting for non-fungible protocols to prevent an NFT being recreated after it is burned &mdash; currently there are NFT standards that do not close the NFT account to avoid account recreation.
 
 > [!NOTE]
 > While PDA and PDA accounts are usually used interchangeably, a PDA is an address and not necessarily an account. More importantly, a PDA can be used to create an account owned by a different program than the only used to derive the PDA.
