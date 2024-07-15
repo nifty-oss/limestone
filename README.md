@@ -18,6 +18,8 @@
 
 Ephemeris enables the creation short-lived program derived addresses (PDAs) signers. These signers are used to create accounts which can be "safely" closed since the same account address (PDA signer) cannot be recreated after a time period, measured in terms of slots.
 
+This feature is useful to avoid reusing an account for something completely different or in cases when applications or indexers store any information about the account, which could get out of sync if the account is closed and recreated on the same address.
+
 You can use Ephemeris as a library or invoke its instruction &mdash; either directly from a client or through a cross program invocation &mdash; in your project. In both cases, you delegate the account creation to Ephemeris. The only difference is the program that signs for the PDA: when used as a library, your program is the signer; the Ephemeris program is the signer when its instruction is used.
 
 ### Using it as a library
