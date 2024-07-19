@@ -1,5 +1,5 @@
 {
-  "name": "@nifty-oss/ephemeris",
+  "name": "@nifty-oss/ephemeris-legacy",
   "version": "0.0.0",
   "description": "Umi-based JavaScript client for the Ephemeris program",
   "main": "dist/src/index.js",
