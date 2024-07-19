@@ -43,10 +43,15 @@ pub struct Arguments<'a, 'b> {
     pub space: u64,
 
     /// Address of program that will own the new account.
-    pub owner: Pubkey,
+    ///
+    /// If `None`, the program referenced by `program_id` will be used as owner.
+    pub owner: Option<Pubkey>,
 }
 
 /// Creates a new account with the default TTL.
+///
+/// This function is a wrapper around [`create_account_with_ttl`] with the default TTL
+/// value.
 pub fn create_account(program_id: &Pubkey, arguments: Arguments) -> ProgramResult {
     create_account_with_ttl(program_id, arguments, DEFAULT_TTL)
 }
@@ -102,7 +107,7 @@ pub fn create_account_with_ttl(
             arguments.to.key,
             arguments.lamports,
             arguments.space,
-            &arguments.owner,
+            arguments.owner.as_ref().unwrap_or(program_id),
         ),
         &[arguments.from.clone(), arguments.to.clone()],
         &[signer_seeds],
