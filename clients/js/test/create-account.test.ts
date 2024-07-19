@@ -24,7 +24,7 @@ test('it creates a new account', async (t) => {
   const createAccountIx = await getCreateAccountInstructionAsync({
     from: payer,
     lamports: 500_000_000n,
-    owner: address('AssetGtQBTSgm5s91d1RAQod5JmaZiJDxqsgtqrZud73'),
+    owner: address('11111111111111111111111111111111'),
     space: 200,
     slot,
   });
@@ -43,6 +43,7 @@ test('it creates a new account', async (t) => {
   t.like(account, {
     address: pda,
     lamports: 500_000_000n,
+    programAddress: address('11111111111111111111111111111111'),
   });
 });
 
@@ -79,5 +80,6 @@ test('it creates a new account with a base address derivation', async (t) => {
   t.like(account, {
     address: pda,
     lamports: 500_000_000n,
+    programAddress: address('AssetGtQBTSgm5s91d1RAQod5JmaZiJDxqsgtqrZud73'),
   });
 });
