@@ -67,7 +67,7 @@ The arguments for the `create_account` are as follows:
 
 Although the use `TTL` defines a time period where the account creation is allowed &mdash; `150` slots is approximately 1 minute 19 seconds assuming `400`ms block times &mdash; it does not guarantee that the account is not closed and recreated between that interval. Additionally, it does not prevent an account being created, closed and recreated on the same transaction.
 
-For protocols that need such guarantee, an addional restriction should be added when closing an account that should not be recreated. The protocol should store the `slot` value used on the account derivation and validate that the account is being closed after `slot + TTL` &mdash; this will prevent the account recreation since the `slot` value will be too old to generate a PDA signer.
+For protocols that need such guarantee, an addional restriction needs be added when closing an account to prevent recreation. The protocol should store the `slot` value used on the account derivation and validate that the account is being closed after `slot + TTL` &mdash; this will prevent the account recreation since the `slot` value will be too old to generate a PDA signer for the same address.
 
 ## License
 
