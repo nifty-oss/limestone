@@ -5,9 +5,14 @@ use solana_program_test::{tokio, ProgramTest};
 use solana_sdk::{
     clock::Clock,
     instruction::InstructionError,
+    program_pack::IsInitialized,
     signature::{Keypair, Signer},
     system_program,
     transaction::Transaction,
+};
+use spl_token_2022::{
+    extension::{ExtensionType, StateWithExtensions},
+    state::Mint,
 };
 
 macro_rules! assert_instruction_error {
@@ -169,4 +174,66 @@ async fn fail_create_account_with_invalid_derivation() {
     // Then we expect an error.
 
     assert_instruction_error!(err, InstructionError::InvalidSeeds);
+}
+
+#[tokio::test]
+async fn create_and_initialize_account() {
+    let mut context = ProgramTest::new("ephemeris_program", ephemeris_client::ID, None)
+        .start_with_context()
+        .await;
+
+    // Given a PDA derived from a base pubkey and the current slot.
+
+    let authority = Keypair::new();
+    let slot = context
+        .banks_client
+        .get_sysvar::<Clock>()
+        .await
+        .unwrap()
+        .slot;
+    let (pda, _) = find_pda(&authority.pubkey(), slot);
+
+    let account_size = ExtensionType::try_calculate_account_len::<Mint>(&[]).unwrap();
+    let rent = context.banks_client.get_rent().await.unwrap();
+
+    let create_ix = CreateAccountBuilder::new()
+        .base(Some(authority.pubkey()))
+        .from(context.payer.pubkey())
+        .to(pda)
+        .slot(slot)
+        .lamports(rent.minimum_balance(account_size))
+        .space(account_size as u64)
+        .owner(spl_token_2022::ID)
+        .instruction();
+
+    let instructions = vec![
+        create_ix,
+        spl_token_2022::instruction::initialize_mint(
+            &spl_token_2022::ID,
+            &pda,
+            &authority.pubkey(),
+            Some(&authority.pubkey()),
+            0,
+        )
+        .unwrap(),
+    ];
+
+    let tx = Transaction::new_signed_with_payer(
+        &instructions,
+        Some(&context.payer.pubkey()),
+        &[&context.payer, &authority],
+        context.last_blockhash,
+    );
+    context.banks_client.process_transaction(tx).await.unwrap();
+
+    // Then an account was created and initialized
+
+    let account = context.banks_client.get_account(pda).await.unwrap();
+
+    assert!(account.is_some());
+
+    let account = account.unwrap();
+    let mint = StateWithExtensions::<Mint>::unpack(&account.data).unwrap();
+
+    assert!(mint.base.is_initialized());
 }
