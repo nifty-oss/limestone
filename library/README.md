@@ -1,8 +1,10 @@
 # <img height="50" alt="ephemeris" src="https://github.com/user-attachments/assets/3c9283a8-b4ac-4ba3-bc54-7f089d126adf"/>
 
-Ephemeris enables the creation short-lived program derived addresses (PDAs) signers. These signers are used to create accounts which can be "safely" closed since the same account address (PDA signer) cannot be recreated after a time period, measured in terms of slots.
+Ephemeris enables the creation short-lived program derived address (PDA) signers. These signers are used to create accounts which can be "safely" closed since the same account address signer cannot be recreated after a time period &mdash; `time` in this case measured in terms of slots.
 
-This feature is useful to avoid reusing an account for something completely different or in cases when applications or indexers store any information about the account, which could get out of sync if the account is closed and recreated on the same address.
+This feature is useful to avoid reusing an account for something completely different, which can create problems for applications and off-chain services that store any information about the account. Therefore, accounts can be closed, avoiding bloating account state, returning all rent funds and enabling the use of accounts to represent "ephemeral" concepts (e.g., receipts, tickets) without incurring unnecessary costs.
+
+> This crate is intended to be used by programs. To create an account from a client, consider using the `ephemeris` program.
 
 ## Getting Started
 
@@ -12,7 +14,7 @@ From your project folder:
 cargo add ephemeris
 ```
 
-On your program, you replace the use of `system_instruction::create_account` with `ephemeris::create_account`:
+On your program, replace the use of `system_instruction::create_account` with `ephemeris::create_account`:
 ```rust
 use ephemeris::{Arguments, create_account};
 
