@@ -21,8 +21,8 @@ use ephemeris::{Arguments, create_account};
 create_account(
   program_id,
   Arguments {
-    to: ctx.accounts.to,
     from: ctx.accounts.from,
+    to: ctx.accounts.to,
     base: None,
     slot,
     lamports,
