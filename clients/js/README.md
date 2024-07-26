@@ -56,7 +56,7 @@ The arguments required to create an account are as follows:
 * `owner`:
   Program that will own the new account.
 
-> The library uses the new Solana [JavaScript SDK Technology Preview](https://www.npmjs.com/package/@solana/web3.js/v/2.0.0-preview.4). There is also a [package](clients/legacy/README.md) using the [Umi framework](https://github.com/metaplex-foundation/umi).
+> This library uses the new Solana [JavaScript SDK Technology Preview](https://www.npmjs.com/package/@solana/web3.js/v/2.0.0-preview.4). There is also a version of the [library](clients/legacy/README.md) using the [Umi framework](https://github.com/metaplex-foundation/umi).
 
 ## License
 
