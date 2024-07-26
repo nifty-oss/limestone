@@ -1,4 +1,4 @@
-# <img height="50" alt="ephemeris" src="https://github.com/user-attachments/assets/3c9283a8-b4ac-4ba3-bc54-7f089d126adf"/>
+# <img height="50" alt="ephemeris" src="https://github.com/user-attachments/assets/5f0246cc-11c8-4216-ba43-37a2318660d2"/>
 
 Ephemeris enables the creation short-lived program derived address (PDA) signers. These signers are used to create accounts which can be "safely" closed since the same account address signer cannot be recreated after a time period &mdash; `time` in this case measured in terms of slots.
 
