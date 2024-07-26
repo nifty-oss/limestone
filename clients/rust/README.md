@@ -1,4 +1,4 @@
-# <img height="50" alt="ephemeris" src="https://github.com/user-attachments/assets/3c9283a8-b4ac-4ba3-bc54-7f089d126adf"/>
+# <img height="50" alt="ephemeris" src="https://github.com/user-attachments/assets/5f0246cc-11c8-4216-ba43-37a2318660d2"/>
 
 A Rust client SDK for Ephemeris [program](https://github.com/nifty-oss/ephemeris).
 
