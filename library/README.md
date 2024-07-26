@@ -36,10 +36,10 @@ The arguments for the `create_account` are as follows:
    It is the address of your program (the account derivation will be done
    within the scope of the program).
 
-* `to` (signer, writable):
+* `from` (signer, writable):
   It is the funding account.
 
-* `from` (writable):
+* `to` (writable):
   It is the account to be created (must be a PDA of `[base, slot]` derived from
   program_id).
 
