@@ -5,7 +5,7 @@
   <img width="400" alt="Limestone" src="https://github.com/user-attachments/assets/a889bf96-5e3f-40de-b343-b8135dfe19a9" />
 </p>
 <p align="center">
-  Generate slot-based unique program derived addresses.
+  Generate short-lived unique program derive address signers.
 </p>
 
 <p align="center">
