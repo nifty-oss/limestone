@@ -1,4 +1,4 @@
-# <img height="50" alt="limestone" src="https://github.com/user-attachments/assets/5f0246cc-11c8-4216-ba43-37a2318660d2"/>
+# <img height="50" alt="limestone" src="https://github.com/user-attachments/assets/53b09445-dba6-43c4-9bdf-f4df9ab677a3"/>
 
 A Umi-based JavaScript client library for Limestone [program](https://github.com/nifty-oss/limestone).
 
@@ -16,8 +16,8 @@ This feature is useful to avoid reusing an account for something completely diff
    ```
 2. Finally, register the library with your Umi instance.
    ```ts
-   import { niftyAsset } from '@nifty-oss/asset';
-   umi.use(niftyAsset());
+   import { limestone } from '@nifty-oss/limestone';
+   umi.use(limestone());
    ```
 
 The library contains a builder for the `CreateAccount` instruction of `limestone` program:
