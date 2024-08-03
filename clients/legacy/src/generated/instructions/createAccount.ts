@@ -94,7 +94,7 @@ export function createAccount(
 ): TransactionBuilder {
   // Program ID.
   const programId = context.programs.getPublicKey(
-    'ephemeris',
+    'limestone',
     'EPHSqv4H9HG5xy1kQaQaLN14zyBP36Jzq7hrQ2ZEZbBj'
   );
 

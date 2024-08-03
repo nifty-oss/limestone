@@ -33,7 +33,7 @@ import {
   type WritableSignerAccount,
 } from '@solana/web3.js';
 import { resolveAccount } from '../../hooked';
-import { EPHEMERIS_PROGRAM_ADDRESS } from '../programs';
+import { LIMESTONE_PROGRAM_ADDRESS } from '../programs';
 import {
   expectSome,
   getAccountMetaFactory,
@@ -41,7 +41,7 @@ import {
 } from '../shared';
 
 export type CreateAccountInstruction<
-  TProgram extends string = typeof EPHEMERIS_PROGRAM_ADDRESS,
+  TProgram extends string = typeof LIMESTONE_PROGRAM_ADDRESS,
   TAccountFrom extends string | IAccountMeta<string> = string,
   TAccountTo extends string | IAccountMeta<string> = string,
   TAccountBase extends string | IAccountMeta<string> = string,
@@ -149,7 +149,7 @@ export async function getCreateAccountInstructionAsync<
   >
 ): Promise<
   CreateAccountInstruction<
-    typeof EPHEMERIS_PROGRAM_ADDRESS,
+    typeof LIMESTONE_PROGRAM_ADDRESS,
     TAccountFrom,
     TAccountTo,
     TAccountBase,
@@ -157,7 +157,7 @@ export async function getCreateAccountInstructionAsync<
   >
 > {
   // Program address.
-  const programAddress = EPHEMERIS_PROGRAM_ADDRESS;
+  const programAddress = LIMESTONE_PROGRAM_ADDRESS;
 
   // Original accounts.
   const originalAccounts = {
@@ -202,7 +202,7 @@ export async function getCreateAccountInstructionAsync<
       args as CreateAccountInstructionDataArgs
     ),
   } as CreateAccountInstruction<
-    typeof EPHEMERIS_PROGRAM_ADDRESS,
+    typeof LIMESTONE_PROGRAM_ADDRESS,
     TAccountFrom,
     TAccountTo,
     TAccountBase,
@@ -245,14 +245,14 @@ export function getCreateAccountInstruction<
     TAccountSystemProgram
   >
 ): CreateAccountInstruction<
-  typeof EPHEMERIS_PROGRAM_ADDRESS,
+  typeof LIMESTONE_PROGRAM_ADDRESS,
   TAccountFrom,
   TAccountTo,
   TAccountBase,
   TAccountSystemProgram
 > {
   // Program address.
-  const programAddress = EPHEMERIS_PROGRAM_ADDRESS;
+  const programAddress = LIMESTONE_PROGRAM_ADDRESS;
 
   // Original accounts.
   const originalAccounts = {
@@ -291,7 +291,7 @@ export function getCreateAccountInstruction<
       args as CreateAccountInstructionDataArgs
     ),
   } as CreateAccountInstruction<
-    typeof EPHEMERIS_PROGRAM_ADDRESS,
+    typeof LIMESTONE_PROGRAM_ADDRESS,
     TAccountFrom,
     TAccountTo,
     TAccountBase,
@@ -302,7 +302,7 @@ export function getCreateAccountInstruction<
 }
 
 export type ParsedCreateAccountInstruction<
-  TProgram extends string = typeof EPHEMERIS_PROGRAM_ADDRESS,
+  TProgram extends string = typeof LIMESTONE_PROGRAM_ADDRESS,
   TAccountMetas extends readonly IAccountMeta[] = readonly IAccountMeta[],
 > = {
   programAddress: Address<TProgram>;
@@ -339,7 +339,7 @@ export function parseCreateAccountInstruction<
   };
   const getNextOptionalAccount = () => {
     const accountMeta = getNextAccount();
-    return accountMeta.address === EPHEMERIS_PROGRAM_ADDRESS
+    return accountMeta.address === LIMESTONE_PROGRAM_ADDRESS
       ? undefined
       : accountMeta;
   };

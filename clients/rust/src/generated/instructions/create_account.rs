@@ -47,7 +47,7 @@ impl CreateAccount {
             ));
         } else {
             accounts.push(solana_program::instruction::AccountMeta::new_readonly(
-                crate::EPHEMERIS_ID,
+                crate::LIMESTONE_ID,
                 false,
             ));
         }
@@ -61,7 +61,7 @@ impl CreateAccount {
         data.append(&mut args);
 
         solana_program::instruction::Instruction {
-            program_id: crate::EPHEMERIS_ID,
+            program_id: crate::LIMESTONE_ID,
             accounts,
             data,
         }
@@ -295,7 +295,7 @@ impl<'a, 'b> CreateAccountCpi<'a, 'b> {
             ));
         } else {
             accounts.push(solana_program::instruction::AccountMeta::new_readonly(
-                crate::EPHEMERIS_ID,
+                crate::LIMESTONE_ID,
                 false,
             ));
         }
@@ -315,7 +315,7 @@ impl<'a, 'b> CreateAccountCpi<'a, 'b> {
         data.append(&mut args);
 
         let instruction = solana_program::instruction::Instruction {
-            program_id: crate::EPHEMERIS_ID,
+            program_id: crate::LIMESTONE_ID,
             accounts,
             data,
         };

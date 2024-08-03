@@ -1,6 +1,6 @@
 #![cfg(feature = "test-sbf")]
 
-use ephemeris_client::{find_pda, instructions::CreateAccountBuilder};
+use limestone_client::{find_pda, instructions::CreateAccountBuilder};
 use solana_program_test::{tokio, ProgramTest};
 use solana_sdk::{
     clock::Clock,
@@ -30,7 +30,7 @@ macro_rules! assert_instruction_error {
 
 #[tokio::test]
 async fn create_account() {
-    let mut context = ProgramTest::new("ephemeris_program", ephemeris_client::ID, None)
+    let mut context = ProgramTest::new("limestone_program", limestone_client::ID, None)
         .start_with_context()
         .await;
 
@@ -79,7 +79,7 @@ async fn create_account() {
 
 #[tokio::test]
 async fn fail_create_account_with_old_slot() {
-    let mut context = ProgramTest::new("ephemeris_program", ephemeris_client::ID, None)
+    let mut context = ProgramTest::new("limestone_program", limestone_client::ID, None)
         .start_with_context()
         .await;
 
@@ -129,7 +129,7 @@ async fn fail_create_account_with_old_slot() {
 
 #[tokio::test]
 async fn fail_create_account_with_invalid_derivation() {
-    let mut context = ProgramTest::new("ephemeris_program", ephemeris_client::ID, None)
+    let mut context = ProgramTest::new("limestone_program", limestone_client::ID, None)
         .start_with_context()
         .await;
 
@@ -178,7 +178,7 @@ async fn fail_create_account_with_invalid_derivation() {
 
 #[tokio::test]
 async fn create_and_initialize_account() {
-    let mut context = ProgramTest::new("ephemeris_program", ephemeris_client::ID, None)
+    let mut context = ProgramTest::new("limestone_program", limestone_client::ID, None)
         .start_with_context()
         .await;
 

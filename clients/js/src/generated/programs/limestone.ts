@@ -9,28 +9,28 @@
 import { containsBytes, getU8Encoder, type Address } from '@solana/web3.js';
 import { type ParsedCreateAccountInstruction } from '../instructions';
 
-export const EPHEMERIS_PROGRAM_ADDRESS =
+export const LIMESTONE_PROGRAM_ADDRESS =
   'EPHSqv4H9HG5xy1kQaQaLN14zyBP36Jzq7hrQ2ZEZbBj' as Address<'EPHSqv4H9HG5xy1kQaQaLN14zyBP36Jzq7hrQ2ZEZbBj'>;
 
-export enum EphemerisInstruction {
+export enum LimestoneInstruction {
   CreateAccount,
 }
 
-export function identifyEphemerisInstruction(
+export function identifyLimestoneInstruction(
   instruction: { data: Uint8Array } | Uint8Array
-): EphemerisInstruction {
+): LimestoneInstruction {
   const data =
     instruction instanceof Uint8Array ? instruction : instruction.data;
   if (containsBytes(data, getU8Encoder().encode(0), 0)) {
-    return EphemerisInstruction.CreateAccount;
+    return LimestoneInstruction.CreateAccount;
   }
   throw new Error(
-    'The provided instruction could not be identified as a ephemeris instruction.'
+    'The provided instruction could not be identified as a limestone instruction.'
   );
 }
 
-export type ParsedEphemerisInstruction<
+export type ParsedLimestoneInstruction<
   TProgram extends string = 'EPHSqv4H9HG5xy1kQaQaLN14zyBP36Jzq7hrQ2ZEZbBj',
 > = {
-  instructionType: EphemerisInstruction.CreateAccount;
+  instructionType: LimestoneInstruction.CreateAccount;
 } & ParsedCreateAccountInstruction<TProgram>;

@@ -19,7 +19,7 @@ const nameToErrorMap: Map<string, ProgramErrorConstructor> = new Map();
  * Attempts to resolve a custom program error from the provided error code.
  * @category Errors
  */
-export function getEphemerisErrorFromCode(
+export function getLimestoneErrorFromCode(
   code: number,
   program: Program,
   cause?: Error
@@ -32,7 +32,7 @@ export function getEphemerisErrorFromCode(
  * Attempts to resolve a custom program error from the provided error name, i.e. 'Unauthorized'.
  * @category Errors
  */
-export function getEphemerisErrorFromName(
+export function getLimestoneErrorFromName(
   name: string,
   program: Program,
   cause?: Error

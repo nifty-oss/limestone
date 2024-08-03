@@ -2,7 +2,7 @@ use arrayref::array_ref;
 use shank::{ShankContext, ShankInstruction};
 use solana_program::{program_error::ProgramError, pubkey::Pubkey};
 
-/// Instructions supported by the Ephemeris program.
+/// Instructions supported by the Limestone program.
 #[derive(Clone, Debug, ShankContext, ShankInstruction)]
 #[rustfmt::skip]
 pub enum Instruction {

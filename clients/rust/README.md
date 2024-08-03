@@ -1,24 +1,24 @@
-# <img height="50" alt="ephemeris" src="https://github.com/user-attachments/assets/5f0246cc-11c8-4216-ba43-37a2318660d2"/>
+# <img height="50" alt="limestone" src="https://github.com/user-attachments/assets/5f0246cc-11c8-4216-ba43-37a2318660d2"/>
 
-A Rust client SDK for Ephemeris [program](https://github.com/nifty-oss/ephemeris).
+A Rust client SDK for Limestone [program](https://github.com/nifty-oss/limestone).
 
-Ephemeris enables the creation short-lived program derived address (PDA) signers. These signers are used to create accounts which can be "safely" closed since the same account address signer cannot be recreated after a time period &mdash; `time` in this case measured in terms of slots.
+Limestone enables the creation short-lived program derived address (PDA) signers. These signers are used to create accounts which can be "safely" closed since the same account address signer cannot be recreated after a time period &mdash; `time` in this case measured in terms of slots.
 
 This feature is useful to avoid reusing an account for something completely different, which can create problems for applications and off-chain services that store any information about the account. Therefore, accounts can be closed, avoiding bloating account state, returning all rent funds and enabling the use of accounts to represent "ephemeral" concepts (e.g., receipts, tickets) without incurring unnecessary costs.
 
-> This crate is intended to be used by clients interacting with the `ephemeris` program. To integrate `ephemeris` account derivation into your PDAs, you can use the library instead.
+> This crate is intended to be used by clients interacting with the `limestone` program. To integrate `limestone` account derivation into your PDAs, you can use the library instead.
 
 ## Getting Started
 
 From your project folder:
 
 ```bash
-cargo add ephemeris-client
+cargo add limestone-client
 ```
 
-On your client, replace the use of `system_instruction::create_account` with `ephemeris::instructions::create_account`. The SDK provides helper to build the required `Instruction`:
+On your client, replace the use of `system_instruction::create_account` with `limestone::instructions::create_account`. The SDK provides helper to build the required `Instruction`:
 ```rust
-use ephemeris_client::{find_pda, instructions::CreateAccountBuilder};
+use limestone_client::{find_pda, instructions::CreateAccountBuilder};
 
 // Creating an account to be used as a SPL Token 2022 mint
 

@@ -1333,40 +1333,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "ephemeris"
-version = "0.0.0"
-dependencies = [
- "solana-program",
-]
-
-[[package]]
-name = "ephemeris-client"
-version = "0.0.0"
-dependencies = [
- "assert_matches",
- "borsh 0.10.3",
- "num-derive 0.3.3",
- "num-traits",
- "serde",
- "serde_with 3.8.3",
- "solana-program",
- "solana-program-test",
- "solana-sdk",
- "spl-token-2022 3.0.4",
- "thiserror",
-]
-
-[[package]]
-name = "ephemeris-program"
-version = "0.0.0"
-dependencies = [
- "arrayref",
- "ephemeris",
- "shank",
- "solana-program",
-]
-
-[[package]]
 name = "equivalent"
 version = "1.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2064,6 +2030,40 @@ dependencies = [
  "ark-ff",
  "num-bigint 0.4.6",
  "thiserror",
+]
+
+[[package]]
+name = "limestone"
+version = "0.0.0"
+dependencies = [
+ "solana-program",
+]
+
+[[package]]
+name = "limestone-client"
+version = "0.0.0"
+dependencies = [
+ "assert_matches",
+ "borsh 0.10.3",
+ "num-derive 0.3.3",
+ "num-traits",
+ "serde",
+ "serde_with 3.8.3",
+ "solana-program",
+ "solana-program-test",
+ "solana-sdk",
+ "spl-token-2022 3.0.4",
+ "thiserror",
+]
+
+[[package]]
+name = "limestone-program"
+version = "0.0.0"
+dependencies = [
+ "arrayref",
+ "limestone",
+ "shank",
+ "solana-program",
 ]
 
 [[package]]

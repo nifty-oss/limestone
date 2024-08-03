@@ -1,22 +1,22 @@
-# <img height="50" alt="ephemeris" src="https://github.com/user-attachments/assets/5f0246cc-11c8-4216-ba43-37a2318660d2"/>
+# <img height="50" alt="limestone" src="https://github.com/user-attachments/assets/5f0246cc-11c8-4216-ba43-37a2318660d2"/>
 
-Ephemeris enables the creation short-lived program derived address (PDA) signers. These signers are used to create accounts which can be "safely" closed since the same account address signer cannot be recreated after a time period &mdash; `time` in this case measured in terms of slots.
+Limestone enables the creation short-lived program derived address (PDA) signers. These signers are used to create accounts which can be "safely" closed since the same account address signer cannot be recreated after a time period &mdash; `time` in this case measured in terms of slots.
 
 This feature is useful to avoid reusing an account for something completely different, which can create problems for applications and off-chain services that store any information about the account. Therefore, accounts can be closed, avoiding bloating account state, returning all rent funds and enabling the use of accounts to represent "ephemeral" concepts (e.g., receipts, tickets) without incurring unnecessary costs.
 
-> This crate is intended to be used by programs. To create an account from a client, consider using the `ephemeris` program.
+> This crate is intended to be used by programs. To create an account from a client, consider using the `limestone` program.
 
 ## Getting Started
 
 From your project folder:
 
 ```bash
-cargo add ephemeris
+cargo add limestone
 ```
 
-On your program, replace the use of `system_instruction::create_account` with `ephemeris::create_account`:
+On your program, replace the use of `system_instruction::create_account` with `limestone::create_account`:
 ```rust
-use ephemeris::{Arguments, create_account};
+use limestone::{Arguments, create_account};
 
 create_account(
   program_id,

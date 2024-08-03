@@ -7,5 +7,5 @@
 
 use solana_program::{pubkey, pubkey::Pubkey};
 
-/// `ephemeris` program ID.
-pub const EPHEMERIS_ID: Pubkey = pubkey!("EPHSqv4H9HG5xy1kQaQaLN14zyBP36Jzq7hrQ2ZEZbBj");
+/// `limestone` program ID.
+pub const LIMESTONE_ID: Pubkey = pubkey!("EPHSqv4H9HG5xy1kQaQaLN14zyBP36Jzq7hrQ2ZEZbBj");

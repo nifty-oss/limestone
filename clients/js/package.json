@@ -1,7 +1,7 @@
 {
-  "name": "@nifty-oss/ephemeris",
+  "name": "@nifty-oss/limestone",
   "version": "0.0.0",
-  "description": "JavaScript client for the Ephemeris program",
+  "description": "JavaScript client for the Limestone program",
   "sideEffects": false,
   "module": "./dist/src/index.mjs",
   "main": "./dist/src/index.js",

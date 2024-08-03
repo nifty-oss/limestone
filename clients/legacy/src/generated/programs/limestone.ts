@@ -13,22 +13,22 @@ import {
   PublicKey,
 } from '@metaplex-foundation/umi';
 import {
-  getEphemerisErrorFromCode,
-  getEphemerisErrorFromName,
+  getLimestoneErrorFromCode,
+  getLimestoneErrorFromName,
 } from '../errors';
 
-export const EPHEMERIS_PROGRAM_ID =
+export const LIMESTONE_PROGRAM_ID =
   'EPHSqv4H9HG5xy1kQaQaLN14zyBP36Jzq7hrQ2ZEZbBj' as PublicKey<'EPHSqv4H9HG5xy1kQaQaLN14zyBP36Jzq7hrQ2ZEZbBj'>;
 
-export function createEphemerisProgram(): Program {
+export function createLimestoneProgram(): Program {
   return {
-    name: 'ephemeris',
-    publicKey: EPHEMERIS_PROGRAM_ID,
+    name: 'limestone',
+    publicKey: LIMESTONE_PROGRAM_ID,
     getErrorFromCode(code: number, cause?: Error) {
-      return getEphemerisErrorFromCode(code, this, cause);
+      return getLimestoneErrorFromCode(code, this, cause);
     },
     getErrorFromName(name: string, cause?: Error) {
-      return getEphemerisErrorFromName(name, this, cause);
+      return getLimestoneErrorFromName(name, this, cause);
     },
     isOnCluster() {
       return true;
@@ -36,20 +36,20 @@ export function createEphemerisProgram(): Program {
   };
 }
 
-export function getEphemerisProgram<T extends Program = Program>(
+export function getLimestoneProgram<T extends Program = Program>(
   context: Pick<Context, 'programs'>,
   clusterFilter?: ClusterFilter
 ): T {
-  return context.programs.get<T>('ephemeris', clusterFilter);
+  return context.programs.get<T>('limestone', clusterFilter);
 }
 
-export function getEphemerisProgramId(
+export function getLimestoneProgramId(
   context: Pick<Context, 'programs'>,
   clusterFilter?: ClusterFilter
 ): PublicKey {
   return context.programs.getPublicKey(
-    'ephemeris',
-    EPHEMERIS_PROGRAM_ID,
+    'limestone',
+    LIMESTONE_PROGRAM_ID,
     clusterFilter
   );
 }

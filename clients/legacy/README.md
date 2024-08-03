@@ -1,8 +1,8 @@
-# <img height="50" alt="ephemeris" src="https://github.com/user-attachments/assets/5f0246cc-11c8-4216-ba43-37a2318660d2"/>
+# <img height="50" alt="limestone" src="https://github.com/user-attachments/assets/5f0246cc-11c8-4216-ba43-37a2318660d2"/>
 
-A Umi-based JavaScript client library for Ephemeris [program](https://github.com/nifty-oss/ephemeris).
+A Umi-based JavaScript client library for Limestone [program](https://github.com/nifty-oss/limestone).
 
-Ephemeris enables the creation short-lived program derived address (PDA) signers. These signers are used to create accounts which can be "safely" closed since the same account address signer cannot be recreated after a time period &mdash; `time` in this case measured in terms of slots.
+Limestone enables the creation short-lived program derived address (PDA) signers. These signers are used to create accounts which can be "safely" closed since the same account address signer cannot be recreated after a time period &mdash; `time` in this case measured in terms of slots.
 
 This feature is useful to avoid reusing an account for something completely different, which can create problems for applications and off-chain services that store any information about the account. Therefore, accounts can be closed, avoiding bloating account state and returning all rent funds &mdash; this enables the use of accounts to represent "ephemeral" concepts (e.g., receipts, tickets) without incurring unnecessary costs.
 
@@ -12,7 +12,7 @@ This feature is useful to avoid reusing an account for something completely diff
 
 2. Next, install this library using the package manager of your choice.
    ```sh
-   npm install @nifty-oss/ephemeris-legacy
+   npm install @nifty-oss/limestone-legacy
    ```
 2. Finally, register the library with your Umi instance.
    ```ts
@@ -20,9 +20,9 @@ This feature is useful to avoid reusing an account for something completely diff
    umi.use(niftyAsset());
    ```
 
-The library contains a builder for the `CreateAccount` instruction of `ephemeris` program:
+The library contains a builder for the `CreateAccount` instruction of `limestone` program:
 ```typescript
-import { createAccount } from '@nifty-oss/ephemeris-legacy';
+import { createAccount } from '@nifty-oss/limestone-legacy';
 
 const slot = await umi.rpc.getSlot();
 

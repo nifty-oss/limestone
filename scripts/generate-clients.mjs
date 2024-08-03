@@ -16,7 +16,7 @@ const kinobi = k.createFromRoot(idl, additionalIdls);
 // Update programs.
 kinobi.update(
   k.updateProgramsVisitor({
-    ephemerisProgram: { name: "ephemeris" },
+    limestoneProgram: { name: "limestone" },
   })
 );
 
@@ -24,7 +24,7 @@ kinobi.update(
 kinobi.update(
   k.bottomUpTransformerVisitor([
     {
-      select: "[programNode]ephemeris",
+      select: "[programNode]limestone",
       transform: (node) => {
         k.assertIsNode(node, "programNode");
         return {

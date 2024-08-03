@@ -1,6 +1,6 @@
 {
   "version": "0.0.0",
-  "name": "ephemeris_program",
+  "name": "limestone_program",
   "instructions": [
     {
       "name": "CreateAccount",

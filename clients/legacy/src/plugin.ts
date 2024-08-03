@@ -1,8 +1,8 @@
 import { UmiPlugin } from '@metaplex-foundation/umi';
-import { createEphemerisProgram } from './generated';
+import { createLimestoneProgram } from './generated';
 
-export const ephemeris = (): UmiPlugin => ({
+export const limestone = (): UmiPlugin => ({
   install(umi) {
-    umi.programs.add(createEphemerisProgram(), false);
+    umi.programs.add(createLimestoneProgram(), false);
   },
 });

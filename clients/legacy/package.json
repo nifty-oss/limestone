@@ -1,7 +1,7 @@
 {
-  "name": "@nifty-oss/ephemeris-legacy",
+  "name": "@nifty-oss/limestone-legacy",
   "version": "0.0.0",
-  "description": "Umi-based JavaScript client for the Ephemeris program",
+  "description": "Umi-based JavaScript client for the Limestone program",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "scripts": {
@@ -21,7 +21,7 @@
     "registry": "https://registry.npmjs.org"
   },
   "homepage": "https://nifty-oss.org",
-  "repository": "https://github.com/nifty-oss/ephemeris.git",
+  "repository": "https://github.com/nifty-oss/limestone.git",
   "author": "nifty-oss maintainers <maintainers@nifty-oss.org>",
   "license": "Apache-2.0",
   "keywords": [

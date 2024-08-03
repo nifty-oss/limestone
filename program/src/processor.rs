@@ -1,4 +1,4 @@
-use ephemeris::Arguments;
+use limestone::Arguments;
 use solana_program::{account_info::AccountInfo, entrypoint::ProgramResult, msg, pubkey::Pubkey};
 
 use crate::instruction::{
@@ -36,7 +36,7 @@ pub fn process_instruction<'a>(
 
 /// Create a new account.
 ///
-/// The account creation logic is implemented in the `ephemeris` crate.
+/// The account creation logic is implemented in the `limestone` crate.
 #[inline(always)]
 fn create_account(
     program_id: &Pubkey,
@@ -46,7 +46,7 @@ fn create_account(
     space: u64,
     owner: Pubkey,
 ) -> ProgramResult {
-    ephemeris::create_account(
+    limestone::create_account(
         program_id,
         Arguments {
             to: ctx.accounts.to,
