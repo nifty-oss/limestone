@@ -16,7 +16,7 @@ This feature is useful to avoid reusing an account for something completely diff
    ```
 2. Finally, register the library with your Umi instance.
    ```ts
-   import { limestone } from '@nifty-oss/limestone';
+   import { limestone } from '@nifty-oss/limestone-legacy';
    umi.use(limestone());
    ```
 
