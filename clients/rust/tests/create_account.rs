@@ -29,7 +29,7 @@ macro_rules! assert_instruction_error {
 }
 
 #[tokio::test]
-async fn create_account() {
+async fn success_create_account() {
     let mut context = ProgramTest::new("limestone_program", limestone_client::ID, None)
         .start_with_context()
         .await;
@@ -177,7 +177,7 @@ async fn fail_create_account_with_invalid_derivation() {
 }
 
 #[tokio::test]
-async fn create_and_initialize_account() {
+async fn success_create_and_initialize_account() {
     let mut context = ProgramTest::new("limestone_program", limestone_client::ID, None)
         .start_with_context()
         .await;

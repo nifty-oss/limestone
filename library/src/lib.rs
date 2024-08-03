@@ -26,10 +26,11 @@ pub struct Arguments<'a, 'b> {
     /// This account must be writable and signer.
     pub from: &'b AccountInfo<'a>,
 
-    /// Base account address to derive the new account.
+    /// Seeds for the account address derivation.
     ///
-    /// If `None`, the address of the `from` account will be used.
-    pub base: Option<Pubkey>,
+    /// If `None`, the address of the `from` account will be used. The `seeds` should not
+    /// include the `slot` value, since its value will be added to the seeds.
+    pub seeds: Option<&'b [&'b [u8]]>,
 
     /// Slot to derive the new account.
     ///
@@ -88,17 +89,28 @@ pub fn create_account_with_ttl(
         return Err(ProgramError::InvalidArgument);
     }
 
-    let base = arguments.base.unwrap_or(*arguments.from.key);
+    let slot_seeds = arguments.slot.to_le_bytes();
+    // Seeds has an extra allocation to store the bump value for the signer.
+    let mut seeds = if let Some(seeds) = arguments.seeds {
+        let mut seeds_with_slot = Vec::with_capacity(seeds.len() + 2);
+        seeds_with_slot.extend_from_slice(seeds);
+        seeds_with_slot.push(&slot_seeds);
+        seeds_with_slot
+    } else {
+        let mut seeds_with_slot = Vec::with_capacity(3);
+        seeds_with_slot.extend_from_slice(&[arguments.from.key.as_ref(), &slot_seeds]);
+        seeds_with_slot
+    };
 
     // Derive the address for the new account.
-    let (address, bump) =
-        Pubkey::find_program_address(&[base.as_ref(), &arguments.slot.to_le_bytes()], program_id);
+    let (address, bump) = Pubkey::find_program_address(&seeds, program_id);
 
     if arguments.to.key != &address {
         return Err(ProgramError::InvalidSeeds);
     }
 
-    let signer_seeds = &[base.as_ref(), &arguments.slot.to_le_bytes(), &[bump]];
+    let signer_bump = [bump];
+    seeds.push(&signer_bump);
 
     // Creates a new account.
     solana_program::program::invoke_signed(
@@ -110,6 +122,6 @@ pub fn create_account_with_ttl(
             arguments.owner.as_ref().unwrap_or(program_id),
         ),
         &[arguments.from.clone(), arguments.to.clone()],
-        &[signer_seeds],
+        &[&seeds],
     )
 }

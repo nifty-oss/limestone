@@ -46,12 +46,18 @@ fn create_account(
     space: u64,
     owner: Pubkey,
 ) -> ProgramResult {
+    let seeds = if let Some(base) = &ctx.accounts.base {
+        [base.key.as_ref()]
+    } else {
+        [ctx.accounts.from.key.as_ref()]
+    };
+
     limestone::create_account(
         program_id,
         Arguments {
             to: ctx.accounts.to,
             from: ctx.accounts.from,
-            base: ctx.accounts.base.map(|account| *account.key),
+            seeds: Some(seeds.as_slice()),
             slot,
             lamports,
             space,
