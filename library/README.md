@@ -23,7 +23,7 @@ create_account(
   Arguments {
     from: ctx.accounts.from,
     to: ctx.accounts.to,
-    base: None,
+    seeds: None,
     slot,
     lamports,
     space,
@@ -40,11 +40,11 @@ The arguments for the `create_account` are as follows:
   It is the funding account.
 
 * `to` (writable):
-  It is the account to be created (must be a PDA of `[base, slot]` derived from
+  It is the account to be created (must be a PDA of `[seeds, slot]` derived from
   program_id).
 
-* `base` (signer, optional):
-  Optional signer for the account derivation (it default to `from` if omitted).
+* `seeds`:
+  Optional array of seeds (it default to `[from]` if omitted).
 
 * `slot`:
   The slot number for the derivation (the slot needs to be within the valid range,
