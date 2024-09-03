@@ -8,8 +8,8 @@ use solana_program::{program_error::ProgramError, pubkey::Pubkey};
 pub enum Instruction {
     /// Create a new account.
     #[account(0, writable, signer, name="from", desc="Funding account")]
-    #[account(1, writable, name="to", desc="New account (pda of `[base, slot number]`)")]
-    #[account(2, signer, optional, name="base", desc="Base account for the address derivation (defaults to `fronm`)")]
+    #[account(1, writable, name="to", desc="New account (pda of `[from, slot number]`)")]
+    #[account(2, optional, name="seed", desc="Additional seed for the account derivation")]
     #[account(3, name="system_program", desc="The system program")]
     CreateAccount {
         /// Slot number for the account derivation.
