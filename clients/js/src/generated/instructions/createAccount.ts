@@ -27,24 +27,19 @@ import {
   type IInstructionWithAccounts,
   type IInstructionWithData,
   type ReadonlyAccount,
-  type ReadonlySignerAccount,
   type TransactionSigner,
   type WritableAccount,
   type WritableSignerAccount,
 } from '@solana/web3.js';
 import { resolveAccount } from '../../hooked';
 import { LIMESTONE_PROGRAM_ADDRESS } from '../programs';
-import {
-  expectSome,
-  getAccountMetaFactory,
-  type ResolvedAccount,
-} from '../shared';
+import { getAccountMetaFactory, type ResolvedAccount } from '../shared';
 
 export type CreateAccountInstruction<
   TProgram extends string = typeof LIMESTONE_PROGRAM_ADDRESS,
   TAccountFrom extends string | IAccountMeta<string> = string,
   TAccountTo extends string | IAccountMeta<string> = string,
-  TAccountBase extends string | IAccountMeta<string> = string,
+  TAccountSeed extends string | IAccountMeta<string> = string,
   TAccountSystemProgram extends
     | string
     | IAccountMeta<string> = '11111111111111111111111111111111',
@@ -57,9 +52,9 @@ export type CreateAccountInstruction<
         ? WritableSignerAccount<TAccountFrom> & IAccountSignerMeta<TAccountFrom>
         : TAccountFrom,
       TAccountTo extends string ? WritableAccount<TAccountTo> : TAccountTo,
-      TAccountBase extends string
-        ? ReadonlySignerAccount<TAccountBase> & IAccountSignerMeta<TAccountBase>
-        : TAccountBase,
+      TAccountSeed extends string
+        ? ReadonlyAccount<TAccountSeed>
+        : TAccountSeed,
       TAccountSystemProgram extends string
         ? ReadonlyAccount<TAccountSystemProgram>
         : TAccountSystemProgram,
@@ -118,15 +113,15 @@ export function getCreateAccountInstructionDataCodec(): Codec<
 export type CreateAccountAsyncInput<
   TAccountFrom extends string = string,
   TAccountTo extends string = string,
-  TAccountBase extends string = string,
+  TAccountSeed extends string = string,
   TAccountSystemProgram extends string = string,
 > = {
   /** Funding account */
   from: TransactionSigner<TAccountFrom>;
-  /** New account (pda of `[base, slot number]`) */
+  /** New account (pda of `[from, slot number]`) */
   to?: Address<TAccountTo>;
-  /** Base account for the address derivation (defaults to `fronm`) */
-  base?: TransactionSigner<TAccountBase>;
+  /** Additional seed for the account derivation */
+  seed?: Address<TAccountSeed>;
   /** The system program */
   systemProgram?: Address<TAccountSystemProgram>;
   slot: CreateAccountInstructionDataArgs['slot'];
@@ -138,13 +133,13 @@ export type CreateAccountAsyncInput<
 export async function getCreateAccountInstructionAsync<
   TAccountFrom extends string,
   TAccountTo extends string,
-  TAccountBase extends string,
+  TAccountSeed extends string,
   TAccountSystemProgram extends string,
 >(
   input: CreateAccountAsyncInput<
     TAccountFrom,
     TAccountTo,
-    TAccountBase,
+    TAccountSeed,
     TAccountSystemProgram
   >
 ): Promise<
@@ -152,7 +147,7 @@ export async function getCreateAccountInstructionAsync<
     typeof LIMESTONE_PROGRAM_ADDRESS,
     TAccountFrom,
     TAccountTo,
-    TAccountBase,
+    TAccountSeed,
     TAccountSystemProgram
   >
 > {
@@ -163,7 +158,7 @@ export async function getCreateAccountInstructionAsync<
   const originalAccounts = {
     from: { value: input.from ?? null, isWritable: true },
     to: { value: input.to ?? null, isWritable: true },
-    base: { value: input.base ?? null, isWritable: false },
+    seed: { value: input.seed ?? null, isWritable: false },
     systemProgram: { value: input.systemProgram ?? null, isWritable: false },
   };
   const accounts = originalAccounts as Record<
@@ -178,9 +173,6 @@ export async function getCreateAccountInstructionAsync<
   const resolverScope = { programAddress, accounts, args };
 
   // Resolve default values.
-  if (!accounts.base.value) {
-    accounts.base.value = expectSome(accounts.from.value);
-  }
   if (!accounts.to.value) {
     accounts.to = { ...accounts.to, ...(await resolveAccount(resolverScope)) };
   }
@@ -194,7 +186,7 @@ export async function getCreateAccountInstructionAsync<
     accounts: [
       getAccountMeta(accounts.from),
       getAccountMeta(accounts.to),
-      getAccountMeta(accounts.base),
+      getAccountMeta(accounts.seed),
       getAccountMeta(accounts.systemProgram),
     ],
     programAddress,
@@ -205,7 +197,7 @@ export async function getCreateAccountInstructionAsync<
     typeof LIMESTONE_PROGRAM_ADDRESS,
     TAccountFrom,
     TAccountTo,
-    TAccountBase,
+    TAccountSeed,
     TAccountSystemProgram
   >;
 
@@ -215,15 +207,15 @@ export async function getCreateAccountInstructionAsync<
 export type CreateAccountInput<
   TAccountFrom extends string = string,
   TAccountTo extends string = string,
-  TAccountBase extends string = string,
+  TAccountSeed extends string = string,
   TAccountSystemProgram extends string = string,
 > = {
   /** Funding account */
   from: TransactionSigner<TAccountFrom>;
-  /** New account (pda of `[base, slot number]`) */
+  /** New account (pda of `[from, slot number]`) */
   to: Address<TAccountTo>;
-  /** Base account for the address derivation (defaults to `fronm`) */
-  base?: TransactionSigner<TAccountBase>;
+  /** Additional seed for the account derivation */
+  seed?: Address<TAccountSeed>;
   /** The system program */
   systemProgram?: Address<TAccountSystemProgram>;
   slot: CreateAccountInstructionDataArgs['slot'];
@@ -235,20 +227,20 @@ export type CreateAccountInput<
 export function getCreateAccountInstruction<
   TAccountFrom extends string,
   TAccountTo extends string,
-  TAccountBase extends string,
+  TAccountSeed extends string,
   TAccountSystemProgram extends string,
 >(
   input: CreateAccountInput<
     TAccountFrom,
     TAccountTo,
-    TAccountBase,
+    TAccountSeed,
     TAccountSystemProgram
   >
 ): CreateAccountInstruction<
   typeof LIMESTONE_PROGRAM_ADDRESS,
   TAccountFrom,
   TAccountTo,
-  TAccountBase,
+  TAccountSeed,
   TAccountSystemProgram
 > {
   // Program address.
@@ -258,7 +250,7 @@ export function getCreateAccountInstruction<
   const originalAccounts = {
     from: { value: input.from ?? null, isWritable: true },
     to: { value: input.to ?? null, isWritable: true },
-    base: { value: input.base ?? null, isWritable: false },
+    seed: { value: input.seed ?? null, isWritable: false },
     systemProgram: { value: input.systemProgram ?? null, isWritable: false },
   };
   const accounts = originalAccounts as Record<
@@ -270,9 +262,6 @@ export function getCreateAccountInstruction<
   const args = { ...input };
 
   // Resolve default values.
-  if (!accounts.base.value) {
-    accounts.base.value = expectSome(accounts.from.value);
-  }
   if (!accounts.systemProgram.value) {
     accounts.systemProgram.value =
       '11111111111111111111111111111111' as Address<'11111111111111111111111111111111'>;
@@ -283,7 +272,7 @@ export function getCreateAccountInstruction<
     accounts: [
       getAccountMeta(accounts.from),
       getAccountMeta(accounts.to),
-      getAccountMeta(accounts.base),
+      getAccountMeta(accounts.seed),
       getAccountMeta(accounts.systemProgram),
     ],
     programAddress,
@@ -294,7 +283,7 @@ export function getCreateAccountInstruction<
     typeof LIMESTONE_PROGRAM_ADDRESS,
     TAccountFrom,
     TAccountTo,
-    TAccountBase,
+    TAccountSeed,
     TAccountSystemProgram
   >;
 
@@ -309,10 +298,10 @@ export type ParsedCreateAccountInstruction<
   accounts: {
     /** Funding account */
     from: TAccountMetas[0];
-    /** New account (pda of `[base, slot number]`) */
+    /** New account (pda of `[from, slot number]`) */
     to: TAccountMetas[1];
-    /** Base account for the address derivation (defaults to `fronm`) */
-    base?: TAccountMetas[2] | undefined;
+    /** Additional seed for the account derivation */
+    seed?: TAccountMetas[2] | undefined;
     /** The system program */
     systemProgram: TAccountMetas[3];
   };
@@ -348,7 +337,7 @@ export function parseCreateAccountInstruction<
     accounts: {
       from: getNextAccount(),
       to: getNextAccount(),
-      base: getNextOptionalAccount(),
+      seed: getNextOptionalAccount(),
       systemProgram: getNextAccount(),
     },
     data: getCreateAccountInstructionDataDecoder().decode(instruction.data),

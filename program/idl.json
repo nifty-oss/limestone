@@ -18,16 +18,16 @@
           "isMut": true,
           "isSigner": false,
           "docs": [
-            "New account (pda of `[base, slot number]`)"
+            "New account (pda of `[from, slot number]`)"
           ]
         },
         {
-          "name": "base",
+          "name": "seed",
           "isMut": false,
-          "isSigner": true,
+          "isSigner": false,
           "isOptional": true,
           "docs": [
-            "Base account for the address derivation (defaults to `fronm`)"
+            "Additional seed for the account derivation"
           ]
         },
         {

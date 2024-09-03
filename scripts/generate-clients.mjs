@@ -34,9 +34,14 @@ kinobi.update(
               name: "account",
               seeds: [
                 k.variablePdaSeedNode(
-                  "base",
+                  "from",
                   k.publicKeyTypeNode(),
-                  "Base public key for the address derivation"
+                  "Funding account"
+                ),
+                k.variablePdaSeedNode(
+                  "seed",
+                  k.fixedSizeTypeNode(k.bytesTypeNode(), 32),
+                  "Additional seed for the account derivation"
                 ),
                 k.variablePdaSeedNode(
                   "slot",
@@ -57,13 +62,10 @@ kinobi.update(
   k.updateInstructionsVisitor({
     createAccount: {
       accounts: {
-        base: {
-          defaultValue: k.accountValueNode("from"),
-        },
         to: {
           defaultValue: k.resolverValueNode("resolveAccount", {
             dependsOn: [
-              k.accountValueNode("base"),
+              k.accountValueNode("seed"),
               k.argumentValueNode("slot"),
             ],
           }),

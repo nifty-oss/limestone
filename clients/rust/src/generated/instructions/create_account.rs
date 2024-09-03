@@ -13,10 +13,10 @@ use solana_program::pubkey::Pubkey;
 pub struct CreateAccount {
     /// Funding account
     pub from: solana_program::pubkey::Pubkey,
-    /// New account (pda of `[base, slot number]`)
+    /// New account (pda of `[from, slot number]`)
     pub to: solana_program::pubkey::Pubkey,
-    /// Base account for the address derivation (defaults to `fronm`)
-    pub base: Option<solana_program::pubkey::Pubkey>,
+    /// Additional seed for the account derivation
+    pub seed: Option<solana_program::pubkey::Pubkey>,
     /// The system program
     pub system_program: solana_program::pubkey::Pubkey,
 }
@@ -41,9 +41,9 @@ impl CreateAccount {
         accounts.push(solana_program::instruction::AccountMeta::new(
             self.to, false,
         ));
-        if let Some(base) = self.base {
+        if let Some(seed) = self.seed {
             accounts.push(solana_program::instruction::AccountMeta::new_readonly(
-                base, true,
+                seed, false,
             ));
         } else {
             accounts.push(solana_program::instruction::AccountMeta::new_readonly(
@@ -100,13 +100,13 @@ pub struct CreateAccountInstructionArgs {
 ///
 ///   0. `[writable, signer]` from
 ///   1. `[writable]` to
-///   2. `[signer, optional]` base
+///   2. `[optional]` seed
 ///   3. `[optional]` system_program (default to `11111111111111111111111111111111`)
 #[derive(Clone, Debug, Default)]
 pub struct CreateAccountBuilder {
     from: Option<solana_program::pubkey::Pubkey>,
     to: Option<solana_program::pubkey::Pubkey>,
-    base: Option<solana_program::pubkey::Pubkey>,
+    seed: Option<solana_program::pubkey::Pubkey>,
     system_program: Option<solana_program::pubkey::Pubkey>,
     slot: Option<u64>,
     lamports: Option<u64>,
@@ -125,17 +125,17 @@ impl CreateAccountBuilder {
         self.from = Some(from);
         self
     }
-    /// New account (pda of `[base, slot number]`)
+    /// New account (pda of `[from, slot number]`)
     #[inline(always)]
     pub fn to(&mut self, to: solana_program::pubkey::Pubkey) -> &mut Self {
         self.to = Some(to);
         self
     }
     /// `[optional account]`
-    /// Base account for the address derivation (defaults to `fronm`)
+    /// Additional seed for the account derivation
     #[inline(always)]
-    pub fn base(&mut self, base: Option<solana_program::pubkey::Pubkey>) -> &mut Self {
-        self.base = base;
+    pub fn seed(&mut self, seed: Option<solana_program::pubkey::Pubkey>) -> &mut Self {
+        self.seed = seed;
         self
     }
     /// `[optional account, default to '11111111111111111111111111111111']`
@@ -188,7 +188,7 @@ impl CreateAccountBuilder {
         let accounts = CreateAccount {
             from: self.from.expect("from is not set"),
             to: self.to.expect("to is not set"),
-            base: self.base,
+            seed: self.seed,
             system_program: self
                 .system_program
                 .unwrap_or(solana_program::pubkey!("11111111111111111111111111111111")),
@@ -208,10 +208,10 @@ impl CreateAccountBuilder {
 pub struct CreateAccountCpiAccounts<'a, 'b> {
     /// Funding account
     pub from: &'b solana_program::account_info::AccountInfo<'a>,
-    /// New account (pda of `[base, slot number]`)
+    /// New account (pda of `[from, slot number]`)
     pub to: &'b solana_program::account_info::AccountInfo<'a>,
-    /// Base account for the address derivation (defaults to `fronm`)
-    pub base: Option<&'b solana_program::account_info::AccountInfo<'a>>,
+    /// Additional seed for the account derivation
+    pub seed: Option<&'b solana_program::account_info::AccountInfo<'a>>,
     /// The system program
     pub system_program: &'b solana_program::account_info::AccountInfo<'a>,
 }
@@ -222,10 +222,10 @@ pub struct CreateAccountCpi<'a, 'b> {
     pub __program: &'b solana_program::account_info::AccountInfo<'a>,
     /// Funding account
     pub from: &'b solana_program::account_info::AccountInfo<'a>,
-    /// New account (pda of `[base, slot number]`)
+    /// New account (pda of `[from, slot number]`)
     pub to: &'b solana_program::account_info::AccountInfo<'a>,
-    /// Base account for the address derivation (defaults to `fronm`)
-    pub base: Option<&'b solana_program::account_info::AccountInfo<'a>>,
+    /// Additional seed for the account derivation
+    pub seed: Option<&'b solana_program::account_info::AccountInfo<'a>>,
     /// The system program
     pub system_program: &'b solana_program::account_info::AccountInfo<'a>,
     /// The arguments for the instruction.
@@ -242,7 +242,7 @@ impl<'a, 'b> CreateAccountCpi<'a, 'b> {
             __program: program,
             from: accounts.from,
             to: accounts.to,
-            base: accounts.base,
+            seed: accounts.seed,
             system_program: accounts.system_program,
             __args: args,
         }
@@ -289,9 +289,9 @@ impl<'a, 'b> CreateAccountCpi<'a, 'b> {
             *self.to.key,
             false,
         ));
-        if let Some(base) = self.base {
+        if let Some(seed) = self.seed {
             accounts.push(solana_program::instruction::AccountMeta::new_readonly(
-                *base.key, true,
+                *seed.key, false,
             ));
         } else {
             accounts.push(solana_program::instruction::AccountMeta::new_readonly(
@@ -323,8 +323,8 @@ impl<'a, 'b> CreateAccountCpi<'a, 'b> {
         account_infos.push(self.__program.clone());
         account_infos.push(self.from.clone());
         account_infos.push(self.to.clone());
-        if let Some(base) = self.base {
-            account_infos.push(base.clone());
+        if let Some(seed) = self.seed {
+            account_infos.push(seed.clone());
         }
         account_infos.push(self.system_program.clone());
         remaining_accounts
@@ -345,7 +345,7 @@ impl<'a, 'b> CreateAccountCpi<'a, 'b> {
 ///
 ///   0. `[writable, signer]` from
 ///   1. `[writable]` to
-///   2. `[signer, optional]` base
+///   2. `[optional]` seed
 ///   3. `[]` system_program
 #[derive(Clone, Debug)]
 pub struct CreateAccountCpiBuilder<'a, 'b> {
@@ -358,7 +358,7 @@ impl<'a, 'b> CreateAccountCpiBuilder<'a, 'b> {
             __program: program,
             from: None,
             to: None,
-            base: None,
+            seed: None,
             system_program: None,
             slot: None,
             lamports: None,
@@ -374,20 +374,20 @@ impl<'a, 'b> CreateAccountCpiBuilder<'a, 'b> {
         self.instruction.from = Some(from);
         self
     }
-    /// New account (pda of `[base, slot number]`)
+    /// New account (pda of `[from, slot number]`)
     #[inline(always)]
     pub fn to(&mut self, to: &'b solana_program::account_info::AccountInfo<'a>) -> &mut Self {
         self.instruction.to = Some(to);
         self
     }
     /// `[optional account]`
-    /// Base account for the address derivation (defaults to `fronm`)
+    /// Additional seed for the account derivation
     #[inline(always)]
-    pub fn base(
+    pub fn seed(
         &mut self,
-        base: Option<&'b solana_program::account_info::AccountInfo<'a>>,
+        seed: Option<&'b solana_program::account_info::AccountInfo<'a>>,
     ) -> &mut Self {
-        self.instruction.base = base;
+        self.instruction.seed = seed;
         self
     }
     /// The system program
@@ -477,7 +477,7 @@ impl<'a, 'b> CreateAccountCpiBuilder<'a, 'b> {
 
             to: self.instruction.to.expect("to is not set"),
 
-            base: self.instruction.base,
+            seed: self.instruction.seed,
 
             system_program: self
                 .instruction
@@ -497,7 +497,7 @@ struct CreateAccountCpiBuilderInstruction<'a, 'b> {
     __program: &'b solana_program::account_info::AccountInfo<'a>,
     from: Option<&'b solana_program::account_info::AccountInfo<'a>>,
     to: Option<&'b solana_program::account_info::AccountInfo<'a>>,
-    base: Option<&'b solana_program::account_info::AccountInfo<'a>>,
+    seed: Option<&'b solana_program::account_info::AccountInfo<'a>>,
     system_program: Option<&'b solana_program::account_info::AccountInfo<'a>>,
     slot: Option<u64>,
     lamports: Option<u64>,

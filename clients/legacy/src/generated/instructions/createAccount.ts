@@ -26,7 +26,6 @@ import { resolveAccount } from '../../hooked';
 import {
   ResolvedAccount,
   ResolvedAccountsWithIndices,
-  expectSome,
   getAccountMetasAndSigners,
 } from '../shared';
 
@@ -34,10 +33,10 @@ import {
 export type CreateAccountInstructionAccounts = {
   /** Funding account */
   from: Signer;
-  /** New account (pda of `[base, slot number]`) */
+  /** New account (pda of `[from, slot number]`) */
   to?: PublicKey | Pda;
-  /** Base account for the address derivation (defaults to `fronm`) */
-  base?: Signer;
+  /** Additional seed for the account derivation */
+  seed?: PublicKey | Pda;
   /** The system program */
   systemProgram?: PublicKey | Pda;
 };
@@ -102,7 +101,7 @@ export function createAccount(
   const resolvedAccounts = {
     from: { index: 0, isWritable: true as boolean, value: input.from ?? null },
     to: { index: 1, isWritable: true as boolean, value: input.to ?? null },
-    base: { index: 2, isWritable: false as boolean, value: input.base ?? null },
+    seed: { index: 2, isWritable: false as boolean, value: input.seed ?? null },
     systemProgram: {
       index: 3,
       isWritable: false as boolean,
@@ -114,9 +113,6 @@ export function createAccount(
   const resolvedArgs: CreateAccountInstructionArgs = { ...input };
 
   // Default values.
-  if (!resolvedAccounts.base.value) {
-    resolvedAccounts.base.value = expectSome(resolvedAccounts.from.value);
-  }
   if (!resolvedAccounts.to.value) {
     resolvedAccounts.to = {
       ...resolvedAccounts.to,
