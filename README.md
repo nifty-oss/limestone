@@ -167,11 +167,13 @@ This in practice restricts the ability to recreate the same account: if the acco
 
 The advantage of using a slot value is that there is no write contention since Limestone does not require a "global" account. An alternative way to achieved something similar is to use a program with a sequential `counter` stored on an account, where the `counter` is incremented every time a new account is created to provide an unique value. The drawback of this approach is that there is a write contention on the account storing the `counter`, which makes it more difficult for different clients to use it concurrently.
 
-## Limitation
+## Limitations
 
 Although the use `TTL` defines a time period where the account creation is allowed &mdash; `150` slots is approximately 1 minute 19 seconds assuming `400`ms block times &mdash; it does not guarantee that the account is not closed and recreated between that interval. Additionally, it does not prevent an account being created, closed and recreated on the same transaction.
 
 For protocols that need such guarantee, an addional restriction should be added when closing an account that should not be recreated. The protocol should store the `slot` value used on the account derivation and validate that the account is being closed after `slot + TTL` &mdash; this will prevent the account recreation since the `slot` value will be too old to generate a PDA signer.
+
+Since a slot value is part of the derivation of the account, it cannot be easily used in scenarios where durable nonces are required to build transactions. It is very likely that the slot value will be invalid when the transaction is signed at a point in the future. This limitation is not due to the approach of using a PDA signer &mdash; it arises from the fact that the slot expires in the same way that a blockhash expires. The alternative in this case is to use an approach where the slot in the derivation is replaced by the nonce value, which will provide a similar guarantee that a derivation is only valid for a particular nonce value.
 
 ## License
 
