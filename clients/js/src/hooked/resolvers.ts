@@ -9,9 +9,14 @@ export const resolveAccount = async ({
   accounts: Record<string, ResolvedAccount>;
   args: { slot: number | bigint };
 }): Promise<Partial<{ value: ProgramDerivedAddress | null }>> => {
+  let base = null;
+  if (accounts.base?.value) {
+    base = expectAddress(accounts.base?.value);
+  }
   return {
     value: await findAccountPda({
-      base: expectAddress(accounts.base?.value),
+      from: expectAddress(accounts.from.value),
+      base,
       slot: args.slot,
     }),
   };

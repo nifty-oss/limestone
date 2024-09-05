@@ -39,14 +39,14 @@ kinobi.update(
                   "Funding account"
                 ),
                 k.variablePdaSeedNode(
-                  "seed",
-                  k.fixedSizeTypeNode(k.bytesTypeNode(), 32),
-                  "Additional seed for the account derivation"
-                ),
-                k.variablePdaSeedNode(
                   "slot",
                   k.numberTypeNode("u64"),
                   "Slot for the address derivation"
+                ),
+                k.variablePdaSeedNode(
+                  "base",
+                  k.remainderOptionTypeNode(k.publicKeyTypeNode()),
+                  "Base public key for the account derivation"
                 ),
               ],
             }),
@@ -65,7 +65,8 @@ kinobi.update(
         to: {
           defaultValue: k.resolverValueNode("resolveAccount", {
             dependsOn: [
-              k.accountValueNode("seed"),
+              k.accountValueNode("from"),
+              k.accountValueNode("base"),
               k.argumentValueNode("slot"),
             ],
           }),

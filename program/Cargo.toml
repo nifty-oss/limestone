@@ -7,7 +7,7 @@ license-file = "../LICENSE"
 publish = false
 
 [package.metadata.solana]
-program-id = "EPHSqv4H9HG5xy1kQaQaLN14zyBP36Jzq7hrQ2ZEZbBj"
+program-id = "LMSToZQenurAeAutm239hcJBCgsaPNaJhNC7nJhrtdB"
 
 [lib]
 crate-type = ["cdylib", "lib"]

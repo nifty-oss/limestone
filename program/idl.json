@@ -18,16 +18,16 @@
           "isMut": true,
           "isSigner": false,
           "docs": [
-            "New account (pda of `[from, slot number]`)"
+            "New account"
           ]
         },
         {
-          "name": "seed",
+          "name": "base",
           "isMut": false,
           "isSigner": false,
           "isOptional": true,
           "docs": [
-            "Additional seed for the account derivation"
+            "Base public key for the account derivation"
           ]
         },
         {
@@ -65,7 +65,7 @@
   ],
   "metadata": {
     "origin": "shank",
-    "address": "EPHSqv4H9HG5xy1kQaQaLN14zyBP36Jzq7hrQ2ZEZbBj",
+    "address": "LMSToZQenurAeAutm239hcJBCgsaPNaJhNC7nJhrtdB",
     "binaryVersion": "0.4.2",
     "libVersion": "^0.4.2"
   }

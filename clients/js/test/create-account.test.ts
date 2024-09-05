@@ -2,7 +2,6 @@ import {
   address,
   appendTransactionMessageInstruction,
   fetchEncodedAccount,
-  generateKeyPairSigner,
   pipe,
 } from '@solana/web3.js';
 import test from 'ava';
@@ -10,6 +9,7 @@ import { findAccountPda, getCreateAccountInstructionAsync } from '../src';
 import {
   createDefaultSolanaClient,
   createDefaultTransaction,
+  generateAddress,
   generateKeyPairSignerWithSol,
   signAndSendTransaction,
 } from './_setup';
@@ -37,7 +37,7 @@ test('it creates a new account', async (t) => {
 
   // Then we expect the account to exist.
 
-  const [pda] = await findAccountPda({ base: payer.address, slot });
+  const [pda] = await findAccountPda({ from: payer.address, slot, base: null });
   const account = await fetchEncodedAccount(client.rpc, pda);
 
   t.like(account, {
@@ -47,14 +47,14 @@ test('it creates a new account', async (t) => {
   });
 });
 
-test('it creates a new account with a base address derivation', async (t) => {
+test('it creates a new account with seeded address derivation', async (t) => {
   // Given an payer key pair with some SOL and the current slot number.
   const client = createDefaultSolanaClient();
   const payer = await generateKeyPairSignerWithSol(client);
   const slot = await client.rpc.getSlot().send();
 
-  // And a base address for the derivation.
-  const base = await generateKeyPairSigner();
+  // And a base public key for the derivation.
+  const base = await generateAddress();
 
   // When we create a new account.
   const createAccountIx = await getCreateAccountInstructionAsync({
@@ -74,7 +74,7 @@ test('it creates a new account with a base address derivation', async (t) => {
 
   // Then we expect the account to exist.
 
-  const [pda] = await findAccountPda({ base: base.address, slot });
+  const [pda] = await findAccountPda({ from: payer.address, base, slot });
   const account = await fetchEncodedAccount(client.rpc, pda);
 
   t.like(account, {

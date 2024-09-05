@@ -9,9 +9,12 @@ export const resolveAccount = (
   _programId: PublicKey,
   isWritable: boolean
 ) => ({
-    value: findAccountPda(context, {
-      base: expectPublicKey(accounts.base.value),
-      slot: args.slot,
-    })[0],
-    isWritable,
-  });
+  value: findAccountPda(context, {
+    from: expectPublicKey(accounts.from.value),
+    slot: args.slot,
+    base: accounts.base?.value
+      ? expectPublicKey(accounts.base.value)
+      : undefined,
+  })[0],
+  isWritable,
+});

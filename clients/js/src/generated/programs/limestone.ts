@@ -6,21 +6,25 @@
  * @see https://github.com/kinobi-so/kinobi
  */
 
-import { containsBytes, getU8Encoder, type Address } from '@solana/web3.js';
+import {
+  containsBytes,
+  getU8Encoder,
+  type Address,
+  type ReadonlyUint8Array,
+} from '@solana/web3.js';
 import { type ParsedCreateAccountInstruction } from '../instructions';
 
 export const LIMESTONE_PROGRAM_ADDRESS =
-  'EPHSqv4H9HG5xy1kQaQaLN14zyBP36Jzq7hrQ2ZEZbBj' as Address<'EPHSqv4H9HG5xy1kQaQaLN14zyBP36Jzq7hrQ2ZEZbBj'>;
+  'LMSToZQenurAeAutm239hcJBCgsaPNaJhNC7nJhrtdB' as Address<'LMSToZQenurAeAutm239hcJBCgsaPNaJhNC7nJhrtdB'>;
 
 export enum LimestoneInstruction {
   CreateAccount,
 }
 
 export function identifyLimestoneInstruction(
-  instruction: { data: Uint8Array } | Uint8Array
+  instruction: { data: ReadonlyUint8Array } | ReadonlyUint8Array
 ): LimestoneInstruction {
-  const data =
-    instruction instanceof Uint8Array ? instruction : instruction.data;
+  const data = 'data' in instruction ? instruction.data : instruction;
   if (containsBytes(data, getU8Encoder().encode(0), 0)) {
     return LimestoneInstruction.CreateAccount;
   }
@@ -30,7 +34,7 @@ export function identifyLimestoneInstruction(
 }
 
 export type ParsedLimestoneInstruction<
-  TProgram extends string = 'EPHSqv4H9HG5xy1kQaQaLN14zyBP36Jzq7hrQ2ZEZbBj',
+  TProgram extends string = 'LMSToZQenurAeAutm239hcJBCgsaPNaJhNC7nJhrtdB',
 > = {
   instructionType: LimestoneInstruction.CreateAccount;
 } & ParsedCreateAccountInstruction<TProgram>;

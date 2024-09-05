@@ -10,4 +10,4 @@ pub mod entrypoint;
 pub mod instruction;
 pub mod processor;
 
-solana_program::declare_id!("EPHSqv4H9HG5xy1kQaQaLN14zyBP36Jzq7hrQ2ZEZbBj");
+solana_program::declare_id!("LMSToZQenurAeAutm239hcJBCgsaPNaJhNC7nJhrtdB");

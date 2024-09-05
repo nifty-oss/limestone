@@ -33,10 +33,10 @@ import {
 export type CreateAccountInstructionAccounts = {
   /** Funding account */
   from: Signer;
-  /** New account (pda of `[from, slot number]`) */
+  /** New account */
   to?: PublicKey | Pda;
-  /** Additional seed for the account derivation */
-  seed?: PublicKey | Pda;
+  /** Base public key for the account derivation */
+  base?: PublicKey | Pda;
   /** The system program */
   systemProgram?: PublicKey | Pda;
 };
@@ -94,14 +94,14 @@ export function createAccount(
   // Program ID.
   const programId = context.programs.getPublicKey(
     'limestone',
-    'EPHSqv4H9HG5xy1kQaQaLN14zyBP36Jzq7hrQ2ZEZbBj'
+    'LMSToZQenurAeAutm239hcJBCgsaPNaJhNC7nJhrtdB'
   );
 
   // Accounts.
   const resolvedAccounts = {
     from: { index: 0, isWritable: true as boolean, value: input.from ?? null },
     to: { index: 1, isWritable: true as boolean, value: input.to ?? null },
-    seed: { index: 2, isWritable: false as boolean, value: input.seed ?? null },
+    base: { index: 2, isWritable: false as boolean, value: input.base ?? null },
     systemProgram: {
       index: 3,
       isWritable: false as boolean,

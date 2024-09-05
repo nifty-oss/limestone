@@ -7,23 +7,22 @@
  */
 
 import {
-  fixEncoderSize,
   getAddressEncoder,
-  getBytesEncoder,
+  getOptionEncoder,
   getProgramDerivedAddress,
   getU64Encoder,
   type Address,
+  type OptionOrNullable,
   type ProgramDerivedAddress,
-  type ReadonlyUint8Array,
 } from '@solana/web3.js';
 
 export type AccountSeeds = {
   /** Funding account */
   from: Address;
-  /** Additional seed for the account derivation */
-  seed: ReadonlyUint8Array;
   /** Slot for the address derivation */
   slot: number | bigint;
+  /** Base public key for the account derivation */
+  base: OptionOrNullable<Address>;
 };
 
 export async function findAccountPda(
@@ -31,14 +30,16 @@ export async function findAccountPda(
   config: { programAddress?: Address | undefined } = {}
 ): Promise<ProgramDerivedAddress> {
   const {
-    programAddress = 'EPHSqv4H9HG5xy1kQaQaLN14zyBP36Jzq7hrQ2ZEZbBj' as Address<'EPHSqv4H9HG5xy1kQaQaLN14zyBP36Jzq7hrQ2ZEZbBj'>,
+    programAddress = 'LMSToZQenurAeAutm239hcJBCgsaPNaJhNC7nJhrtdB' as Address<'LMSToZQenurAeAutm239hcJBCgsaPNaJhNC7nJhrtdB'>,
   } = config;
   return await getProgramDerivedAddress({
     programAddress,
     seeds: [
       getAddressEncoder().encode(seeds.from),
-      fixEncoderSize(getBytesEncoder(), 32).encode(seeds.seed),
       getU64Encoder().encode(seeds.slot),
+      getOptionEncoder(getAddressEncoder(), { prefix: null }).encode(
+        seeds.base
+      ),
     ],
   });
 }

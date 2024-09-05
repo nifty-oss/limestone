@@ -84,21 +84,21 @@ async fn success_create_account_with_seed() {
 
     // Given a PDA derived from a base pubkey and the current slot.
 
-    let seed = Pubkey::new_unique();
+    let base = Pubkey::new_unique();
     let slot = context
         .banks_client
         .get_sysvar::<Clock>()
         .await
         .unwrap()
         .slot;
-    let (pda, _) = find_pda_with_seed(&context.payer.pubkey(), &seed.to_bytes(), slot);
+    let (pda, _) = find_pda_with_seed(&context.payer.pubkey(), slot, &base);
 
     // When we create an account for the PDA.
 
     let ix = CreateAccountBuilder::new()
         .from(context.payer.pubkey())
         .to(pda)
-        .seed(Some(seed))
+        .base(Some(base))
         .slot(slot)
         .lamports(5_000_000_000)
         .space(200)

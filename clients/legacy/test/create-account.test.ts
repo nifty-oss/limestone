@@ -20,7 +20,7 @@ test('it creates a new account', async (t) => {
   }).sendAndConfirm(umi);
 
   // Then we expect the account to exist.
-  const pda = publicKey(findAccountPda(umi, { base: payer.publicKey, slot }));
+  const pda = publicKey(findAccountPda(umi, { from: payer.publicKey, slot }));
   const account = await umi.rpc.getAccount(pda);
 
   t.like(account, {
@@ -32,14 +32,14 @@ test('it creates a new account', async (t) => {
   });
 });
 
-test('it creates a new account with a base address derivation', async (t) => {
+test('it creates a new account with a seeded address derivation', async (t) => {
   // Given a Umi instance and a new signer.
   const umi = await createUmi();
   const payer = await generateSignerWithSol(umi);
   const slot = await umi.rpc.getSlot();
 
-  // And a base signer.
-  const base = await generateSigner(umi);
+  // And a base public key.
+  const base = generateSigner(umi).publicKey;
 
   // When we create a new account.
   await createAccount(umi, {
@@ -52,7 +52,7 @@ test('it creates a new account with a base address derivation', async (t) => {
   }).sendAndConfirm(umi);
 
   // Then we expect the account to exist.
-  const pda = publicKey(findAccountPda(umi, { base: base.publicKey, slot }));
+  const pda = publicKey(findAccountPda(umi, { from: payer.publicKey, slot, base }));
   const account = await umi.rpc.getAccount(pda);
 
   t.like(account, {

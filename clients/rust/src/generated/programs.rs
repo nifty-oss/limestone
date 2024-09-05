@@ -8,4 +8,4 @@
 use solana_program::{pubkey, pubkey::Pubkey};
 
 /// `limestone` program ID.
-pub const LIMESTONE_ID: Pubkey = pubkey!("EPHSqv4H9HG5xy1kQaQaLN14zyBP36Jzq7hrQ2ZEZbBj");
+pub const LIMESTONE_ID: Pubkey = pubkey!("LMSToZQenurAeAutm239hcJBCgsaPNaJhNC7nJhrtdB");

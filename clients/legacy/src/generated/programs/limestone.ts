@@ -18,7 +18,7 @@ import {
 } from '../errors';
 
 export const LIMESTONE_PROGRAM_ID =
-  'EPHSqv4H9HG5xy1kQaQaLN14zyBP36Jzq7hrQ2ZEZbBj' as PublicKey<'EPHSqv4H9HG5xy1kQaQaLN14zyBP36Jzq7hrQ2ZEZbBj'>;
+  'LMSToZQenurAeAutm239hcJBCgsaPNaJhNC7nJhrtdB' as PublicKey<'LMSToZQenurAeAutm239hcJBCgsaPNaJhNC7nJhrtdB'>;
 
 export function createLimestoneProgram(): Program {
   return {

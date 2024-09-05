@@ -62,7 +62,7 @@ pub struct Arguments<'a, 'b> {
 ///
 /// This function returns two errors:
 ///
-/// - `ProgramError::InvalidArgument` if the slot is too old
+/// - `ProgramError::InvalidArgument` if the slot is too old.
 /// - `ProgramError::InvalidSeeds` if the derived address does not match the `to` account
 ///   (`to` must match `[from, slot]`).
 pub fn create_account(program_id: &Pubkey, arguments: Arguments) -> ProgramResult {
@@ -71,8 +71,8 @@ pub fn create_account(program_id: &Pubkey, arguments: Arguments) -> ProgramResul
 
 /// Creates a new account with using the specified seeds and default TTL.
 ///
-/// The address of the new account is derived using the `from` account, `seeds` and the `slot`
-/// value for the specified `program_id`.
+/// The address of the new account is derived using the `from` account, `slot` and `seeds`
+/// values for the specified `program_id`.
 ///
 /// The `slot` value must be within the `ttl` (time-to-live) range (`slot <= current slot + ttl`);
 /// otherwise, the account derivation is considered invalid and a `ProgramError::InvalidArgument`
@@ -86,9 +86,9 @@ pub fn create_account(program_id: &Pubkey, arguments: Arguments) -> ProgramResul
 ///
 /// This function returns two errors:
 ///
-/// - `ProgramError::InvalidArgument` if the slot is too old
+/// - `ProgramError::InvalidArgument` if the slot is too old.
 /// - `ProgramError::InvalidSeeds` if the derived address does not match the `to` account
-///   (`to` must match `[from, seeds, slot]`).
+///   (`to` must match `[from, slot, seeds]`).
 pub fn create_account_with_seeds(
     program_id: &Pubkey,
     arguments: Arguments,
@@ -115,7 +115,7 @@ pub fn create_account_with_seeds(
 ///
 /// This function returns two errors:
 ///
-/// - `ProgramError::InvalidArgument` if the slot is too old
+/// - `ProgramError::InvalidArgument` if the slot is too old.
 /// - `ProgramError::InvalidSeeds` if the derived address does not match the `to` account
 ///   (`to` must match `[from, slot]`).
 pub fn create_account_with_ttl(
@@ -128,8 +128,8 @@ pub fn create_account_with_ttl(
 
 /// Creates a new account with using the specified seeds and the specified TTL.
 ///
-/// The address of the new account is derived using the `from` account, `seeds` and the `slot`
-/// value for the specified `program_id`.
+/// The address of the new account is derived using the `from` account, `slot` and `seeds`
+/// values for the specified `program_id`.
 ///
 /// The `slot` value must be within the `ttl` (time-to-live) range (`slot <= current slot + ttl`);
 /// otherwise, the account derivation is considered invalid and a `ProgramError::InvalidArgument`
@@ -143,9 +143,9 @@ pub fn create_account_with_ttl(
 ///
 /// This function returns two errors:
 ///
-/// - `ProgramError::InvalidArgument` if the slot is too old
+/// - `ProgramError::InvalidArgument` if the slot is too old.
 /// - `ProgramError::InvalidSeeds` if the derived address does not match the `to` account
-///   (`to` must match `[from, slot]`).
+///   (`to` must match `[from, slot, seeds]`).
 pub fn create_account_with_seeds_and_ttl(
     program_id: &Pubkey,
     arguments: Arguments,
@@ -176,8 +176,8 @@ fn _create_account(
     let mut seeds = if let Some(seeds) = seeds {
         let mut seeds_with_slot = Vec::with_capacity(seeds.len() + 3);
         seeds_with_slot.push(arguments.from.key.as_ref());
-        seeds_with_slot.extend_from_slice(seeds);
         seeds_with_slot.push(&slot_seeds);
+        seeds_with_slot.extend_from_slice(seeds);
         seeds_with_slot
     } else {
         let mut seeds_with_slot = Vec::with_capacity(3);
