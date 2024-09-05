@@ -46,8 +46,8 @@ fn create_account(
     space: u64,
     owner: Pubkey,
 ) -> ProgramResult {
-    let seed = if let Some(seed) = &ctx.accounts.seed {
-        seed.key.as_ref()
+    let seed = if let Some(base) = &ctx.accounts.base {
+        base.key.as_ref()
     } else {
         &[]
     };

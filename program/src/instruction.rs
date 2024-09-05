@@ -7,9 +7,13 @@ use solana_program::{program_error::ProgramError, pubkey::Pubkey};
 #[rustfmt::skip]
 pub enum Instruction {
     /// Create a new account.
+    /// 
+    /// The new account address is derived from the `from` account and the slot number. When
+    /// a `base` public key is provided, the new account address is derived from the `from`
+    /// account, the slot number, and the `base` public key.
     #[account(0, writable, signer, name="from", desc="Funding account")]
-    #[account(1, writable, name="to", desc="New account (pda of `[from, slot number]`)")]
-    #[account(2, optional, name="seed", desc="Additional seed for the account derivation")]
+    #[account(1, writable, name="to", desc="New account")]
+    #[account(2, optional, name="base", desc="Base public key for the account derivation")]
     #[account(3, name="system_program", desc="The system program")]
     CreateAccount {
         /// Slot number for the account derivation.
