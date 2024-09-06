@@ -43,11 +43,10 @@ create_account(
   Arguments {
     to: ctx.accounts.to,
     from: ctx.accounts.from,
-    base: None,
-    slot,
     lamports,
     space,
     owner: Some(system_program::ID),
+    slot,
   },
 )?;
 ```
@@ -56,19 +55,12 @@ The arguments for the `create_account` are as follows:
    It is the address of your program (the account derivation will be done
    within the scope of the program).
 
-* `to` (signer, writable):
+* `from` (signer, writable):
   It is the funding account.
 
-* `from` (writable):
-  It is the account to be created (must be a PDA of `[base, slot]` derived from
+* `to` (writable):
+  It is the account to be created (must be a PDA of `[from, slot]` derived from
   program_id).
-
-* `base` (signer, optional):
-  Optional signer for the account derivation (it default to `from` if omitted).
-
-* `slot`:
-  The slot number for the derivation (the slot needs to be within the valid range,
-  i.e., not older than `current slot - TTL`).
 
 * `lamports`:
   The lamports to be transferred to the new account (must be at least the amount
@@ -80,6 +72,10 @@ The arguments for the `create_account` are as follows:
 * `owner`:
   Optinal program that will own the new account (it default to `program_id` if
   omitted).
+
+* `slot`:
+  The slot number for the derivation (the slot needs to be within the valid range,
+  i.e., not older than `current slot - TTL`).
 
 > [!IMPORTANT]
 > `create_account` uses the default `TTL` value of `150` slots. This is typically the number of slots that a `blockhash` is available and maximizes the chance of the account creation to succeed. You can use the `create_account_with_ttl` if you want to use a different `TTL` value – a lower `TTL` provides a shorter interval for the PDA signer to be available. At the same time, if your transaction is not executed within the `TTL` slots, it will fail.
@@ -109,8 +105,6 @@ const createAccountIx = await getCreateAccountInstructionAsync({
 ```
 
 > [!NOTE]
-> The the `base` address is not specified, the derivation defaults to use the `from` address. There is no need to specify the `to` address, since the instruction builder is able to derive the address.
->
 > The package uses the new Solana [JavaScript SDK Technology Preview](https://www.npmjs.com/package/@solana/web3.js/v/2.0.0-preview.4). There is also a [package](clients/legacy/README.md) using the Umi framework.
 
 #### Rust
@@ -130,10 +124,10 @@ let (pda, _) = find_pda(&payer.pubkey(), slot);
 let create_ix = CreateAccountBuilder::new()
   .from(payer.pubkey())
   .to(pda)
-  .slot(slot)
   .lamports(5_000_000_000)
   .space(200)
   .owner(system_program::ID)
+  .slot(slot)
   .instruction();
 ```
 
@@ -147,10 +141,10 @@ CreateAccountCpiBuilder::new(program_info)
   .from(&payer_info)
   .to(&pda_info)
   .system_program(&system_program_info)
-  .slot(slot)
   .lamports(5_000_000_000)
   .space(200)
   .owner(system_program::ID)
+  .slot(slot)
   .invoke()?;
 ```
 
