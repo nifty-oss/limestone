@@ -6,8 +6,8 @@ on:
   pull_request:
 
 env:
-  NODE_VERSION: 18
-  SOLANA_VERSION: 1.18.12
+  NODE_VERSION: 20
+  SOLANA_VERSION: 1.18.23
   CARGO_CACHE: |
     ~/.cargo/bin/
     ~/.cargo/registry/index/
