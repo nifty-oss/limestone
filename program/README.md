@@ -2,7 +2,7 @@
 
 Program ID: `LMSToZQenurAeAutm239hcJBCgsaPNaJhNC7nJhrtdB`
 
-> [!NOTE]
+> [!IMPORTANT]
 > The program will be made immutable once it is deployed to mainnet.
 
 ## Building
