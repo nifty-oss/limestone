@@ -38,14 +38,17 @@
     "account",
     "blockchain"
   ],
+  "dependencies": {
+    "@solana/assertions": "^2.0.0-rc.1"
+  },
   "peerDependencies": {
-    "@solana/web3.js": "2.0.0-preview.4"
+    "@solana/web3.js": "2.0.0-rc.1"
   },
   "devDependencies": {
     "@ava/typescript": "^4.1.0",
     "@solana/eslint-config-solana": "^3.0.0",
-    "@solana/web3.js": "2.0.0-preview.4",
-    "@solana/webcrypto-ed25519-polyfill": "2.0.0-preview.4",
+    "@solana/web3.js": "2.0.0-rc.1",
+    "@solana/webcrypto-ed25519-polyfill": "2.0.0-rc.1",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "ava": "^6.1.2",

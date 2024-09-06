@@ -1,4 +1,5 @@
 export * from './generated';
+export * from './hash';
 export * from './hooked';
 
 // The time-to-live for a slot value.
