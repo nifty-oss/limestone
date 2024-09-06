@@ -23,11 +23,10 @@ create_account(
   Arguments {
     from: ctx.accounts.from,
     to: ctx.accounts.to,
-    seeds: None,
-    slot,
     lamports,
     space,
     owner: Some(system_program::ID),
+    slot,
   },
 )?;
 ```
@@ -40,15 +39,8 @@ The arguments for the `create_account` are as follows:
   It is the funding account.
 
 * `to` (writable):
-  It is the account to be created (must be a PDA of `[seeds, slot]` derived from
+  It is the account to be created (must be a PDA of `[from, slot]` derived from
   program_id).
-
-* `seeds`:
-  Optional array of seeds (it default to `[from]` if omitted).
-
-* `slot`:
-  The slot number for the derivation (the slot needs to be within the valid range,
-  i.e., not older than `current slot - TTL`).
 
 * `lamports`:
   The lamports to be transferred to the new account (must be at least the amount
@@ -61,6 +53,10 @@ The arguments for the `create_account` are as follows:
   Optinal program that will own the new account (it default to `program_id` if
   omitted).
 
+* `slot`:
+  The slot number for the derivation (the slot needs to be within the valid range,
+  i.e., not older than `current slot - TTL`).
+
 ### 💡 Important
 
 `create_account` uses the default `TTL` value of `150` slots. This is typically the number of slots that a `blockhash` is available and maximizes the chance of the account creation to succeed. You can use the `create_account_with_ttl` if you want to use a different `TTL` value – a lower `TTL` provides a shorter interval for the PDA signer to be available. At the same time, if your transaction is not executed within the `TTL` slots, it will fail.
@@ -69,7 +65,9 @@ The arguments for the `create_account` are as follows:
 
 Although the use `TTL` defines a time period where the account creation is allowed &mdash; `150` slots is approximately 1 minute 19 seconds assuming `400`ms block times &mdash; it does not guarantee that the account is not closed and recreated between that interval. Additionally, it does not prevent an account being created, closed and recreated on the same transaction.
 
-For protocols that need such guarantee, an addional restriction needs be added when closing an account to prevent recreation. The protocol should store the `slot` value used on the account derivation and validate that the account is being closed after `slot + TTL` &mdash; this will prevent the account recreation since the `slot` value will be too old to generate a PDA signer for the same address.
+For protocols that need such guarantee, an addional restriction should be added when closing an account that should not be recreated. The protocol should store the `slot` value used on the account derivation and validate that the account is being closed after `slot + TTL` &mdash; this will prevent the account recreation since the `slot` value will be too old to generate a PDA signer.
+
+Since a slot value is part of the derivation of the account, it cannot be easily used in scenarios where durable nonces are required to build transactions. It is very likely that the slot value will be invalid when the transaction is signed at a point in the future. This limitation is not due to the approach of using a PDA signer &mdash; it arises from the fact that the slot expires in the same way that a blockhash expires. The alternative in this case is to use an approach where the slot in the derivation is replaced by the nonce value, which will provide a similar guarantee that a derivation is only valid for a particular nonce value.
 
 ## License
 
