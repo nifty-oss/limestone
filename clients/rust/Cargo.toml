@@ -3,7 +3,9 @@ name = "limestone-client"
 version = "0.0.0"
 edition = "2021"
 readme = "README.md"
-license-file = "../../LICENSE"
+license = "Apache-2.0"
+authors = ["nifty-oss maintainers <maintainers@nifty-oss.org>"]
+repository = "https://github.com/nifty-oss/limestone"
 
 [features]
 test-sbf = []
