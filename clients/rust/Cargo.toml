@@ -1,7 +1,7 @@
 [package]
 name = "limestone-client"
 description = "A Rust client SDK for Limestone program"
-version = "0.0.0"
+version = "0.1.0"
 edition = "2021"
 readme = "README.md"
 license = "Apache-2.0"
