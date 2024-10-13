@@ -1,51 +1,51 @@
 #!/usr/bin/env zx
 import "zx/globals";
-import * as k from "kinobi";
-import { rootNodeFromAnchor } from "@kinobi-so/nodes-from-anchor";
-import { renderVisitor as renderJavaScriptVisitor } from "@kinobi-so/renderers-js";
-import { renderVisitor as renderLegacyJavaScriptVisitor } from "@kinobi-so/renderers-js-umi";
-import { renderVisitor as renderRustVisitor } from "@kinobi-so/renderers-rust";
+import * as c from "codama";
+import { rootNodeFromAnchor } from "@codama/nodes-from-anchor";
+import { renderVisitor as renderJavaScriptVisitor } from "@codama/renderers-js";
+import { renderVisitor as renderLegacyJavaScriptVisitor } from "@codama/renderers-js-umi";
+import { renderVisitor as renderRustVisitor } from "@codama/renderers-rust";
 import { getAllProgramIdls } from "./utils.mjs";
 
-// Instanciate Kinobi.
+// Instanciate Codama.
 const [idl, ...additionalIdls] = getAllProgramIdls().map((idl) =>
   rootNodeFromAnchor(require(idl))
 );
-const kinobi = k.createFromRoot(idl, additionalIdls);
+const codama = c.createFromRoot(idl, additionalIdls);
 
 // Update programs.
-kinobi.update(
-  k.updateProgramsVisitor({
+codama.update(
+  c.updateProgramsVisitor({
     limestoneProgram: { name: "limestone" },
   })
 );
 
 // Add pda information.
-kinobi.update(
-  k.bottomUpTransformerVisitor([
+codama.update(
+  c.bottomUpTransformerVisitor([
     {
       select: "[programNode]limestone",
       transform: (node) => {
-        k.assertIsNode(node, "programNode");
+        c.assertIsNode(node, "programNode");
         return {
           ...node,
           pdas: [
-            k.pdaNode({
+            c.pdaNode({
               name: "account",
               seeds: [
-                k.variablePdaSeedNode(
+                c.variablePdaSeedNode(
                   "from",
-                  k.publicKeyTypeNode(),
+                  c.publicKeyTypeNode(),
                   "Funding account"
                 ),
-                k.variablePdaSeedNode(
+                c.variablePdaSeedNode(
                   "slot",
-                  k.numberTypeNode("u64"),
+                  c.numberTypeNode("u64"),
                   "Slot for the address derivation"
                 ),
-                k.variablePdaSeedNode(
+                c.variablePdaSeedNode(
                   "base",
-                  k.remainderOptionTypeNode(k.publicKeyTypeNode()),
+                  c.remainderOptionTypeNode(c.publicKeyTypeNode()),
                   "Base public key for the account derivation"
                 ),
               ],
@@ -58,16 +58,16 @@ kinobi.update(
 );
 
 // Update instructions.
-kinobi.update(
-  k.updateInstructionsVisitor({
+codama.update(
+  c.updateInstructionsVisitor({
     createAccount: {
       accounts: {
         to: {
-          defaultValue: k.resolverValueNode("resolveAccount", {
+          defaultValue: c.resolverValueNode("resolveAccount", {
             dependsOn: [
-              k.accountValueNode("from"),
-              k.accountValueNode("base"),
-              k.argumentValueNode("slot"),
+              c.accountValueNode("from"),
+              c.accountValueNode("base"),
+              c.argumentValueNode("slot"),
             ],
           }),
         },
@@ -78,7 +78,7 @@ kinobi.update(
 
 // Render JavaScript.
 const jsClient = path.join(__dirname, "..", "clients", "js");
-kinobi.accept(
+codama.accept(
   renderJavaScriptVisitor(path.join(jsClient, "src", "generated"), {
     prettier: require(path.join(jsClient, ".prettierrc.json")),
     asyncResolvers: ["resolveAccount"],
@@ -87,7 +87,7 @@ kinobi.accept(
 
 // Render legacy JavaScript.
 const jsLegacyClient = path.join(__dirname, "..", "clients", "legacy");
-kinobi.accept(
+codama.accept(
   renderLegacyJavaScriptVisitor(path.join(jsLegacyClient, "src", "generated"), {
     prettier: require(path.join(jsLegacyClient, ".prettierrc.json")),
   })
@@ -95,7 +95,7 @@ kinobi.accept(
 
 // Render Rust.
 const rustClient = path.join(__dirname, "..", "clients", "rust");
-kinobi.accept(
+codama.accept(
   renderRustVisitor(path.join(rustClient, "src", "generated"), {
     formatCode: true,
     crateFolder: rustClient,
