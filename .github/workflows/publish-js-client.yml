@@ -29,7 +29,7 @@ on:
 
 jobs:
   test_js:
-    name: Test JS client
+    name: Test Client (js)
     runs-on: ubuntu-latest
     steps:
       - name: Git Checkout
@@ -41,20 +41,20 @@ jobs:
           cargo-cache-key: cargo-programs
           solana: true
 
-      - name: Format JS Client
+      - name: Format Client (js)
         run: pnpm clients:js:format
 
-      - name: Lint JS Client
+      - name: Lint Client (js)
         run: pnpm clients:js:lint
 
-      - name: Build Programs
+      - name: Build (programs)
         run: pnpm programs:build
 
-      - name: Test JS Client
+      - name: Test Client (js)
         run: pnpm clients:js:test
 
   publish_js:
-    name: Publish JS client
+    name: Publish Client (js)
     runs-on: ubuntu-latest
     needs: test_js
     permissions:

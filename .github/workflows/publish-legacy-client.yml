@@ -29,7 +29,7 @@ on:
 
 jobs:
   test_legacy:
-    name: Test JS client
+    name: Test Client (legacy)
     runs-on: ubuntu-latest
     steps:
       - name: Git Checkout
@@ -41,20 +41,20 @@ jobs:
           cargo-cache-key: cargo-programs
           solana: true
 
-      - name: Format Legacy JS Client
+      - name: Format Client (legacy)
         run: pnpm clients:legacy:format
 
-      - name: Lint Legaacy JS Client
+      - name: Lint Client (legacy)
         run: pnpm clients:legacy:lint
 
-      - name: Build Programs
+      - name: Build (programs)
         run: pnpm programs:build
 
-      - name: Test Legacy JS Client
+      - name: Test Client (legacy)
         run: pnpm clients:legacy:test
 
   publish_js:
-    name: Publish Legacy JS client
+    name: Publish Client (legacy)
     runs-on: ubuntu-latest
     needs: test_legacy
     permissions:
