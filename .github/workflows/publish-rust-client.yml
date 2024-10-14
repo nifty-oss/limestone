@@ -92,8 +92,14 @@ jobs:
 
       - name: Set Git Author
         run: |
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "github-actions"
+
+      - name: Check semver
+        uses: obi1kenobi/cargo-semver-checks-action@v2
+        with:
+          release-type: ${{ inputs.level }}
+          package: "limestone-client"
 
       - name: Publish Rust Client
         id: publish

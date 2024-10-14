@@ -28,7 +28,7 @@ on:
         default: true
 
 jobs:
-  test_js:
+  test_legacy:
     name: Test JS client
     runs-on: ubuntu-latest
     steps:
@@ -41,22 +41,22 @@ jobs:
           cargo-cache-key: cargo-programs
           solana: true
 
-      - name: Format JS Client
-        run: pnpm clients:js:format
+      - name: Format Legacy JS Client
+        run: pnpm clients:legacy:format
 
-      - name: Lint JS Client
-        run: pnpm clients:js:lint
+      - name: Lint Legaacy JS Client
+        run: pnpm clients:legacy:lint
 
       - name: Build Programs
         run: pnpm programs:build
 
-      - name: Test JS Client
-        run: pnpm clients:js:test
+      - name: Test Legacy JS Client
+        run: pnpm clients:legacy:test
 
   publish_js:
-    name: Publish JS client
+    name: Publish Legacy JS client
     runs-on: ubuntu-latest
-    needs: test_js
+    needs: test_legacy
     permissions:
       contents: write
     steps:
@@ -85,9 +85,9 @@ jobs:
           git config --global user.email "github-actions@github.com"
           git config --global user.name "github-actions"
 
-      - name: Publish JS Client
+      - name: Publish Legacy JS Client
         id: publish
-        run: pnpm clients:js:publish ${{ inputs.level }} ${{ inputs.tag }}
+        run: pnpm clients:legacy:publish ${{ inputs.level }} ${{ inputs.tag }}
 
       - name: Push Commit and Tag
         run: git push origin --follow-tags
@@ -96,4 +96,4 @@ jobs:
         if: github.event.inputs.create_release == 'true'
         uses: ncipollo/release-action@v1
         with:
-          tag: js@v${{ steps.publish.outputs.new_version }}
+          tag: legacy@v${{ steps.publish.outputs.new_version }}
