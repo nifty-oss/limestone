@@ -1,15 +1,29 @@
 #!/usr/bin/env zx
 import 'zx/globals';
 import {
-  getRustfmtToolchain,
+  cliArguments,
   getProgramFolders,
-  getToolchainArg,
+  getToolchainArgument,
+  partitionArguments,
+  popArgument,
   workingDirectory,
 } from '../utils.mjs';
 
-const toolchain = getToolchainArg(getRustfmtToolchain());
-// Format the programs using rust fmt.
+// Configure additional arguments here, e.g.:
+// ['--arg1', '--arg2', ...cliArguments()]
+const formatArgs = cliArguments();
+
+const fix = popArgument(formatArgs, '--fix');
+const [cargoArgs, fmtArgs] = partitionArguments(formatArgs, '--');
+const toolchain = getToolchainArgument('format');
+
+// Format the programs.
 for (const folder of getProgramFolders()) {
-  cd(`${path.join(workingDirectory, folder)}`);
-  await $`cargo ${toolchain} fmt ${process.argv.slice(3)}`;
-}
+    const manifestPath = path.join(workingDirectory, folder, 'Cargo.toml');
+
+    if (fix) {
+      await $`cargo ${toolchain} fmt --manifest-path ${manifestPath} ${cargoArgs} -- ${fmtArgs}`;
+    } else {
+      await $`cargo ${toolchain} fmt --manifest-path ${manifestPath} ${cargoArgs} -- --check ${fmtArgs}`;
+    }
+  }

@@ -52,7 +52,9 @@ test('it creates a new account with a seeded address derivation', async (t) => {
   }).sendAndConfirm(umi);
 
   // Then we expect the account to exist.
-  const pda = publicKey(findAccountPda(umi, { from: payer.publicKey, slot, base }));
+  const pda = publicKey(
+    findAccountPda(umi, { from: payer.publicKey, slot, base })
+  );
   const account = await umi.rpc.getAccount(pda);
 
   t.like(account, {
