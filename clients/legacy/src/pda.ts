@@ -1,7 +1,7 @@
 import { Context, Pda, PublicKey } from '@metaplex-foundation/umi';
 import {
   publicKey as publicKeySerializer,
-  u64
+  u64,
 } from '@metaplex-foundation/umi/serializers';
 
 export function findAccountPda(
@@ -25,10 +25,9 @@ export function findAccountPda(
       u64().serialize(Number(seeds.slot)),
       publicKeySerializer().serialize(seeds.base),
     ]);
-  } else {
-    return context.eddsa.findPda(programId, [
-      publicKeySerializer().serialize(seeds.from),
-      u64().serialize(Number(seeds.slot)),
-    ]);
   }
+  return context.eddsa.findPda(programId, [
+    publicKeySerializer().serialize(seeds.from),
+    u64().serialize(Number(seeds.slot)),
+  ]);
 }
