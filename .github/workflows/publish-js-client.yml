@@ -1,4 +1,4 @@
-name: Publish JS Client
+name: Publish Client (js)
 
 on:
   workflow_dispatch:
