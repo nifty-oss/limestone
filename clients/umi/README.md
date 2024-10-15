@@ -8,7 +8,7 @@ This feature is useful to avoid reusing an account for something completely diff
 
 ## Getting Started
 
-1. First, if you're not already using Umi, [follow these instructions to install the Metaplex Umi framework](https://github.com/metaplex-foundation/umi/blob/main/docs/installation.md).
+1. First, if you're not already using Umi, [follow these instructions to install the Metaplex Umi framework](https://developers.metaplex.com/umi/getting-started).
 
 2. Next, install this library using the package manager of your choice.
    ```sh
