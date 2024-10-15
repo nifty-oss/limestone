@@ -1,4 +1,4 @@
-name: Publish Client (legacy)
+name: Publish Client (umi)
 
 on:
   workflow_dispatch:
@@ -28,8 +28,8 @@ on:
         default: true
 
 jobs:
-  test_legacy:
-    name: Test Client (legacy)
+  test_umi:
+    name: Test Client (umi)
     runs-on: ubuntu-latest
     steps:
       - name: Git Checkout
@@ -41,22 +41,22 @@ jobs:
           cargo-cache-key: cargo-programs
           solana: true
 
-      - name: Format Client (legacy)
-        run: pnpm clients:legacy:format
+      - name: Format Client (umi)
+        run: pnpm clients:umi:format
 
-      - name: Lint Client (legacy)
-        run: pnpm clients:legacy:lint
+      - name: Lint Client (umi)
+        run: pnpm clients:umi:lint
 
       - name: Build (programs)
         run: pnpm programs:build
 
-      - name: Test Client (legacy)
-        run: pnpm clients:legacy:test
+      - name: Test Client (umi)
+        run: pnpm clients:umi:test
 
   publish_js:
-    name: Publish Client (legacy)
+    name: Publish Client (umi)
     runs-on: ubuntu-latest
-    needs: test_legacy
+    needs: test_umi
     permissions:
       contents: write
     steps:
@@ -87,9 +87,9 @@ jobs:
           git config --global user.email "github-actions@github.com"
           git config --global user.name "github-actions"
 
-      - name: Publish Legacy JS Client
+      - name: Publish Umi JS Client
         id: publish
-        run: pnpm clients:legacy:publish ${{ inputs.level }} ${{ inputs.tag }}
+        run: pnpm clients:umi:publish ${{ inputs.level }} ${{ inputs.tag }}
 
       - name: Push Commit and Tag
         run: git push origin --follow-tags
@@ -98,4 +98,4 @@ jobs:
         if: github.event.inputs.create_release == 'true'
         uses: ncipollo/release-action@v1
         with:
-          tag: legacy@v${{ steps.publish.outputs.new_version }}
+          tag: umi@v${{ steps.publish.outputs.new_version }}

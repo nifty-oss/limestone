@@ -8,21 +8,21 @@ This feature is useful to avoid reusing an account for something completely diff
 
 ## Getting Started
 
-1. First, if you're not already using Umi, [follow these instructions to install the Umi framework](https://github.com/metaplex-foundation/umi/blob/main/docs/installation.md).
+1. First, if you're not already using Umi, [follow these instructions to install the Metaplex Umi framework](https://github.com/metaplex-foundation/umi/blob/main/docs/installation.md).
 
 2. Next, install this library using the package manager of your choice.
    ```sh
-   npm install @nifty-oss/limestone-legacy
+   npm install @nifty-oss/limestone-umi
    ```
 2. Finally, register the library with your Umi instance.
    ```ts
-   import { limestone } from '@nifty-oss/limestone-legacy';
+   import { limestone } from '@nifty-oss/limestone-umi';
    umi.use(limestone());
    ```
 
 The library contains a builder for the `CreateAccount` instruction of `limestone` program:
 ```typescript
-import { createAccount } from '@nifty-oss/limestone-legacy';
+import { createAccount } from '@nifty-oss/limestone-umi';
 
 const slot = await umi.rpc.getSlot();
 
@@ -62,7 +62,7 @@ The arguments required to create an account are as follows:
 * `owner`:
   Program that will own the new account.
 
-> This library uses the [Umi framework](https://github.com/metaplex-foundation/umi). There is also a version of the [library](clients/legacy/README.md) using the new Solana [JavaScript SDK Technology Preview](https://www.npmjs.com/package/@solana/web3.js/v/2.0.0-preview.4).
+> This library uses the [Metaplex Umi framework](https://github.com/metaplex-foundation/umi). There is also a version of the library using the new Solana [JavaScript SDK](https://www.npmjs.com/package/@solana/web3.js/v/2.0.0-rc.1).
 
 ## License
 

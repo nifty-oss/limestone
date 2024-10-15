@@ -1,5 +1,5 @@
 {
-  "name": "@nifty-oss/limestone-legacy",
+  "name": "@nifty-oss/limestone-umi",
   "version": "0.0.0",
   "description": "Umi-based JavaScript client for the Limestone program",
   "main": "dist/src/index.js",

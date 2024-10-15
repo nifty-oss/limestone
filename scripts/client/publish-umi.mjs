@@ -8,7 +8,7 @@ if (!level) {
 }
 
 // Go to the client directory and install the dependencies.
-cd(path.join(workingDirectory, 'clients', 'legacy'));
+cd(path.join(workingDirectory, 'clients', 'umi'));
 await $`pnpm install`;
 
 // Update the version.
@@ -32,4 +32,4 @@ await $`pnpm publish --no-git-checks --tag ${tag}`;
 await $`git commit -am "Publish Legacy JS client v${newVersion}"`;
 
 // Tag the new version.
-await $`git tag -a legacy@v${newVersion} -m "Legacy JS client v${newVersion}"`;
+await $`git tag -a umi@v${newVersion} -m "Umi JS client v${newVersion}"`;
