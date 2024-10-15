@@ -3,7 +3,7 @@ import "zx/globals";
 import * as c from "codama";
 import { rootNodeFromAnchor } from "@codama/nodes-from-anchor";
 import { renderVisitor as renderJavaScriptVisitor } from "@codama/renderers-js";
-import { renderVisitor as renderLegacyJavaScriptVisitor } from "@codama/renderers-js-umi";
+import { renderVisitor as renderUmiJavaScriptVisitor } from "@codama/renderers-js-umi";
 import { renderVisitor as renderRustVisitor } from "@codama/renderers-rust";
 import { getAllProgramIdls } from "./utils.mjs";
 
@@ -85,11 +85,11 @@ codama.accept(
   })
 );
 
-// Render legacy JavaScript.
-const jsLegacyClient = path.join(__dirname, "..", "clients", "legacy");
+// Render Umi JavaScript.
+const jsUmiClient = path.join(__dirname, "..", "clients", "umi");
 codama.accept(
-  renderLegacyJavaScriptVisitor(path.join(jsLegacyClient, "src", "generated"), {
-    prettier: require(path.join(jsLegacyClient, ".prettierrc.json")),
+  renderUmiJavaScriptVisitor(path.join(jsUmiClient, "src", "generated"), {
+    prettier: require(path.join(jsUmiClient, ".prettierrc.json")),
   })
 );
 
