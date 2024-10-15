@@ -62,7 +62,7 @@ The arguments required to create an account are as follows:
 * `owner`:
   Program that will own the new account.
 
-> This library uses the [Metaplex Umi framework](https://github.com/metaplex-foundation/umi). There is also a version of the library using the new Solana [JavaScript SDK](https://www.npmjs.com/package/@solana/web3.js/v/2.0.0-rc.1).
+> This library uses the [Metaplex Umi framework](https://github.com/metaplex-foundation/umi). There is also a [version](https://www.npmjs.com/package/@nifty-oss/limestone) of the library using the new Solana [JavaScript SDK](https://www.npmjs.com/package/@solana/web3.js/v/2.0.0-rc.1).
 
 ## License
 
