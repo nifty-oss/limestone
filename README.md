@@ -105,7 +105,7 @@ const createAccountIx = await getCreateAccountInstructionAsync({
 ```
 
 > [!NOTE]
-> The package uses the new Solana [JavaScript SDK Technology Preview](https://www.npmjs.com/package/@solana/web3.js/v/2.0.0-preview.4). There is also a [package](clients/legacy/README.md) using the Umi framework.
+> The package uses the new Solana [JavaScript SDK](https://www.npmjs.com/package/@solana/web3.js/v/2.0.0-rc.1). There is also a [package](clients/umi/README.md) using the Metaplex Umi framework.
 
 #### Rust
 
